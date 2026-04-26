@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sudarshan Bot 15M — Trade Analysis Report (Mar 2–Apr 24, 2026)</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #21262d;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --red: #f85149;
+      --yellow: #d29922;
+      --orange: #e3b341;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --tag-bg: #1f2937;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    /* ─── Layout ─── */
+    header {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 40px 20px;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .header-copy { min-width: 280px; }
+    header h1 { font-size: 1.7rem; font-weight: 700; color: var(--accent); }
+    header p  { color: var(--muted); margin-top: 4px; font-size: 0.85rem; }
+    .header-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #3fb950, #2ea043);
+      color: #0d1117;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+      box-shadow: 0 8px 24px rgba(63,185,80,.2);
+    }
+    .bot-switch {
+      display: flex;
+      gap: 8px;
+      padding: 14px 40px 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .bot-tab {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+    .bot-tab.active {
+      color: var(--accent);
+      border-color: rgba(88,166,255,.45);
+      background: rgba(88,166,255,.08);
+    }
+    /* ─── KPI Strip ─── */
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+    }
+    .kpi-divider {
+      grid-column: 1 / -1;
+      height: 1px;
+      background: var(--border);
+    }
+    .kpi {
+      position: relative;
+      padding: 16px 20px 14px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+    .kpi:hover { background: var(--surface2); }
+    .kpi::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 0;
+    }
+    .kpi.k-blue::after  { background: var(--accent); }
+    .kpi.k-green::after { background: var(--green); }
+    .kpi.k-red::after   { background: var(--red); }
+    .kpi.k-purple::after{ background: #a371f7; }
+    .kpi.k-orange::after{ background: #f0883e; }
+    .kpi .kpi-icon { font-size: 1rem; margin-bottom: 6px; line-height: 1; }
+    .kpi .label {
+      font-size: 0.68rem; text-transform: uppercase;
+      letter-spacing: .09em; color: var(--muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .kpi .value {
+      font-size: 1.35rem; font-weight: 700;
+      margin-top: 3px; line-height: 1.2;
+      white-space: nowrap;
+    }
+    .kpi .value.pos { color: var(--green); }
+    .kpi .value.neg { color: var(--red); }
+    .kpi .value.neu { color: var(--accent); }
+    .kpi .value.purple { color: #a371f7; }
+    .kpi .sub-label {
+      font-size: 0.66rem; color: var(--muted);
+      margin-top: 2px; line-height: 1.3;
+    }
+    main { padding: 28px 40px; max-width: 1400px; margin: 0 auto; }
+    section { margin-bottom: 48px; }
+    section h2 {
+      font-size: 1.15rem; font-weight: 700;
+      border-left: 3px solid var(--accent);
+      padding-left: 12px; margin-bottom: 16px;
+    }
+    /* ─── Day cards ─── */
+    .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+    .day-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    .day-card:hover { border-color: var(--accent); }
+    .day-card .card-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 18px 10px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .day-card .date-label { font-weight: 700; font-size: 1rem; }
+    .day-card .net-badge {
+      padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;
+    }
+    .badge-pos { background: rgba(63,185,80,.15); color: var(--green); }
+    .badge-neg { background: rgba(248,81,73,.15); color: var(--red); }
+    .badge-zero{ background: rgba(88,166,255,.1);  color: var(--accent); }
+    .card-meta { padding: 10px 18px; font-size: 0.8rem; color: var(--muted); display: flex; gap: 16px; flex-wrap: wrap; }
+    .card-body {
+     padding: 12px 18px 16px;
+     display: none;
+     overflow-x: auto;
+     -webkit-overflow-scrolling: touch;
+     }
+
+    .card-body.open { display: block; }
+    /* ─── Trade table ─── */
+    .trade-table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    } 
+
+    .trade-table th {
+      text-align: left; padding: 7px 8px;
+      background: var(--surface2); color: var(--muted);
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: .05em;
+      border-bottom: 1px solid var(--border);
+    }
+    .trade-table td { padding: 7px 8px; border-bottom: 1px solid rgba(48,54,61,.5); }
+    .trade-table tr:last-child td { border-bottom: none; }
+    .side-sell { color: #f0883e; font-weight: 600; }
+    .side-buy  { color: var(--green); font-weight: 600; }
+    .pnl-pos   { color: var(--green); font-weight: 600; }
+    .pnl-neg   { color: var(--red); font-weight: 600; }
+    .pnl-zero  { color: var(--muted); }
+    .summary-row { background: rgba(88,166,255,.06); font-weight: 600; }
+    /* ─── Anomaly section ─── */
+    .anomaly-list { display: flex; flex-direction: column; gap: 12px; }
+    .anomaly-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--yellow);
+      border-radius: 8px;
+      padding: 14px 18px;
+    }
+    .anomaly-item.critical { border-left-color: var(--red); }
+    .anomaly-item.info     { border-left-color: var(--accent); }
+    .anomaly-item h4 { font-size: 0.9rem; margin-bottom: 6px; }
+    .anomaly-item p  { font-size: 0.82rem; color: var(--muted); }
+    .tag {
+      display: inline-block; font-size: 0.68rem; padding: 2px 8px;
+      border-radius: 4px; margin-right: 4px; margin-bottom: 4px;
+      font-weight: 600; letter-spacing: .04em;
+    }
+    .tag-red    { background: rgba(248,81,73,.2); color: var(--red); }
+    .tag-yellow { background: rgba(210,153,34,.2); color: var(--orange); }
+    .tag-blue   { background: rgba(88,166,255,.2); color: var(--accent); }
+    .tag-green  { background: rgba(63,185,80,.2); color: var(--green); }
+    /* ─── Heatmap row ─── */
+    .heatmap { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+    .hm-cell {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 90px; height: 70px; border-radius: 8px; cursor: pointer;
+      font-size: 0.72rem; border: 1px solid transparent; transition: transform .15s;
+    }
+    .hm-cell:hover { transform: translateY(-2px); }
+    .hm-cell .hm-date { font-weight: 600; margin-bottom: 3px; }
+    .hm-cell .hm-val  { font-size: 0.85rem; font-weight: 700; }
+    /* ─── Cumulative PnL chart ─── */
+    .chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    canvas { width: 100% !important; }
+    /* ─── March 20 analysis ─── */
+    .march20-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .stock-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .stock-card h4 { font-size: 1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .stock-card .reason { font-size: 0.82rem; }
+    .stock-card .rejection-log {
+      font-family: monospace; font-size: 0.72rem;
+      background: var(--surface2); border-radius: 6px;
+      padding: 8px 10px; margin-top: 8px; color: var(--muted);
+      line-height: 1.7;
+    }
+    .dot-red   { width: 9px; height: 9px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
+    .dot-green { width: 9px; height: 9px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+    /* tabs */
+    .tab-bar { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+    .tab-btn {
+      padding: 8px 16px; border: none; background: transparent;
+      color: var(--muted); cursor: pointer; font-size: 0.85rem;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: color .15s;
+    }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+    /* toggle arrow */
+    .toggle-arrow { font-size: 0.8rem; color: var(--muted); transition: transform .2s; }
+    .toggle-arrow.open { transform: rotate(90deg); }
+    .setup-cta-banner {
+      margin: 8px 0 18px;
+      padding: 16px;
+      border: 1px solid rgba(88,166,255,.35);
+      border-radius: 12px;
+      background: linear-gradient(120deg, rgba(88,166,255,.12), rgba(63,185,80,.08));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .setup-cta-copy h3 {
+      font-size: 1.05rem;
+      margin: 0 0 4px 0;
+      color: var(--text);
+    }
+    .setup-cta-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .setup-cta-btn {
+      border: none;
+      background: var(--green);
+      color: #0d1117;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .setup-float-cta {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 999;
+      border: none;
+      background: var(--green);
+      color: #0d1117;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 999px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.35);
+      cursor: pointer;
+    }
+    @media (max-width: 1100px) {
+      .summary-strip { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
+      header, main { padding-left: 16px; padding-right: 16px; }
+      .summary-strip { grid-template-columns: repeat(2, 1fr); }
+      .hm-cell { width: 70px; height: 58px; }
+      .bot-switch { padding-left: 16px; padding-right: 16px; }
+      .setup-float-cta {
+        right: 12px;
+        left: 12px;
+        bottom: 12px;
+        border-radius: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-bar">
+    <div class="header-copy">
+      <h1 id="page-title">📊 Sudarshan Bot — Trade Analysis Report</h1>
+      <p id="page-period">Period: 2 March 2026 – 24 April 2026 &nbsp;|&nbsp; All figures in ₹ &nbsp;|&nbsp; Paper Trading</p>
+    </div>
+    <a class="header-cta" href="https://signup.fyers.in/?utm-source=AP-Leads&utm-medium=AP4561" target="_blank" rel="noopener noreferrer">
+      Open FYERS Account
+    </a>
+  </div>
+</header>
+
+<div class="bot-switch">
+  <button class="bot-tab active" type="button" data-bot="fifteen" onclick="showBotTab('fifteen')">15 Min Bot</button>
+  <button class="bot-tab" type="button" data-bot="five" onclick="showBotTab('five')">5 Min Bot</button>
+</div>
+
+<!-- ─── KPI Strip ─── -->
+<div class="summary-strip">
+
+  <!-- Row 1: Capital & Returns -->
+  <div class="kpi k-blue">
+    <div class="kpi-icon">🏦</div>
+    <div class="label">Total Capital</div>
+    <div class="value neu" id="kpi-capital">—</div>
+    <div class="sub-label" id="kpi-capital-note">Configured report capital</div>
+  </div>
+  <div class="kpi k-blue">
+    <div class="kpi-icon">📊</div>
+    <div class="label">Gross P&amp;L</div>
+    <div class="value" id="kpi-gross">—</div>
+    <div class="sub-label">Before charges</div>
+  </div>
+  <div class="kpi k-orange">
+    <div class="kpi-icon">💸</div>
+    <div class="label">Charges (approx)</div>
+    <div class="value neg" id="kpi-charges">—</div>
+    <div class="sub-label">STT + brokerage</div>
+  </div>
+  <div class="kpi k-blue">
+    <div class="kpi-icon">💰</div>
+    <div class="label">Net P&amp;L</div>
+    <div class="value" id="kpi-net">—</div>
+    <div class="sub-label">After all charges</div>
+  </div>
+  <div class="kpi k-purple">
+    <div class="kpi-icon">📈</div>
+    <div class="label">Return on Capital</div>
+    <div class="value purple" id="kpi-roc">—</div>
+    <div class="sub-label">Period return</div>
+  </div>
+  <div class="kpi k-purple" style="border-right:none">
+    <div class="kpi-icon">🚀</div>
+    <div class="label">Annualised ROI</div>
+    <div class="value purple" id="kpi-ann">—</div>
+    <div class="sub-label">Extrapolated</div>
+  </div>
+
+  <div class="kpi-divider"></div>
+
+  <!-- Row 2: Trade Statistics -->
+  <div class="kpi k-blue">
+    <div class="kpi-icon">📅</div>
+    <div class="label">Trading Days</div>
+    <div class="value neu" id="kpi-days">—</div>
+    <div class="sub-label">Sessions logged</div>
+  </div>
+  <div class="kpi k-blue">
+    <div class="kpi-icon">🔁</div>
+    <div class="label">Total Trades</div>
+    <div class="value neu" id="kpi-trades">—</div>
+    <div class="sub-label">Executed orders</div>
+  </div>
+  <div class="kpi k-green">
+    <div class="kpi-icon">✅</div>
+    <div class="label">Winning Days</div>
+    <div class="value pos" id="kpi-wins">—</div>
+    <div class="sub-label">Net positive days</div>
+  </div>
+  <div class="kpi k-red">
+    <div class="kpi-icon">❌</div>
+    <div class="label">Losing Days</div>
+    <div class="value neg" id="kpi-losses">—</div>
+    <div class="sub-label">Net negative days</div>
+  </div>
+  <div class="kpi k-green">
+    <div class="kpi-icon">🏆</div>
+    <div class="label">Best Day</div>
+    <div class="value pos" id="kpi-best">—</div>
+    <div class="sub-label">Highest net</div>
+  </div>
+  <div class="kpi k-red" style="border-right:none">
+    <div class="kpi-icon">📉</div>
+    <div class="label">Worst Day</div>
+    <div class="value neg" id="kpi-worst">—</div>
+    <div class="sub-label">Lowest net</div>
+  </div>
+
+</div>
+
+<main>
+
+<!-- ─── Tabs ─── -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+  <button class="tab-btn" onclick="showTab('daywise')">Day-Wise Trades</button>
+</div>
+
+<section class="setup-cta-banner">
+  <div class="setup-cta-copy">
+    <h3>If you want to run this bot on your own FYERS account, submit your setup request.</h3>
+    <p>Takes less than 1 minute. Jaipal and team will contact you on WhatsApp.</p>
+  </div>
+  <button class="setup-cta-btn" type="button" onclick="scrollToSetupRequest()">Request Bot Setup</button>
+</section>
+
+<!-- ═══════════ TAB: OVERVIEW ═══════════ -->
+<div id="tab-overview" class="tab-pane active">
+
+  <section>
+    <h2>Cumulative P&amp;L Chart</h2>
+    <div class="chart-wrap">
+      <canvas id="pnlChart" height="280"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h2>Daily P&amp;L Heatmap</h2>
+    <div class="heatmap" id="heatmap"></div>
+  </section>
+
+  <section>
+    <h2>Weekly &amp; Monthly P&amp;L</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:14px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px">
+        <div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Best Week</div>
+        <div id="wk-best" style="margin-top:6px;font-size:1.1rem;font-weight:700">—</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px">
+        <div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Worst Week</div>
+        <div id="wk-worst" style="margin-top:6px;font-size:1.1rem;font-weight:700">—</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px">
+        <div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Best Month</div>
+        <div id="mo-best" style="margin-top:6px;font-size:1.1rem;font-weight:700">—</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px">
+        <div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Worst Month</div>
+        <div id="mo-worst" style="margin-top:6px;font-size:1.1rem;font-weight:700">—</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;overflow-x:auto">
+        <div style="font-weight:700;margin:4px 0 10px">Weekly Summary</div>
+        <table class="trade-table" style="width:100%">
+          <thead>
+            <tr><th>Week</th><th>Days</th><th>Net P&amp;L</th></tr>
+          </thead>
+          <tbody id="weeklyBody"></tbody>
+        </table>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;overflow-x:auto">
+        <div style="font-weight:700;margin:4px 0 10px">Monthly Summary</div>
+        <table class="trade-table" style="width:100%">
+          <thead>
+            <tr><th>Month</th><th>Days</th><th>Net P&amp;L</th></tr>
+          </thead>
+          <tbody id="monthlyBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>&#x1F4B0; Capital Usage Breakdown</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:16px">
+      <div style="background:var(--card);border-radius:8px;padding:14px;border-left:4px solid var(--accent)">
+        <div style="color:var(--muted);font-size:0.78rem;margin-bottom:4px">Account Balance Required</div>
+        <div id="usage-capital" style="font-size:1.4rem;font-weight:700">—</div>
+        <div style="color:var(--muted);font-size:0.75rem">Actual cash in trading account</div>
+      </div>
+      <div style="background:var(--card);border-radius:8px;padding:14px;border-left:4px solid #f39c12">
+        <div style="color:var(--muted);font-size:0.78rem;margin-bottom:4px">Intraday Leverage</div>
+        <div id="usage-leverage" style="font-size:1.4rem;font-weight:700">—</div>
+        <div style="color:var(--muted);font-size:0.75rem">Broker-provided MIS leverage</div>
+      </div>
+      <div style="background:var(--card);border-radius:8px;padding:14px;border-left:4px solid #9b59b6">
+        <div style="color:var(--muted);font-size:0.78rem;margin-bottom:4px">Max Notional / Trade</div>
+        <div id="usage-max-notional" style="font-size:1.4rem;font-weight:700">—</div>
+        <div id="usage-max-notional-note" style="color:var(--muted);font-size:0.75rem">Per-trade notional cap</div>
+      </div>
+      <div style="background:var(--card);border-radius:8px;padding:14px;border-left:4px solid #3498db">
+        <div style="color:var(--muted);font-size:0.78rem;margin-bottom:4px">Margin Blocked / Trade</div>
+        <div id="usage-margin" style="font-size:1.4rem;font-weight:700">—</div>
+        <div style="color:var(--muted);font-size:0.75rem">Max 25% of account per position</div>
+      </div>
+      <div style="background:var(--card);border-radius:8px;padding:14px;border-left:4px solid #2ecc71">
+        <div style="color:var(--muted);font-size:0.78rem;margin-bottom:4px">Risk Per Trade (Fixed)</div>
+        <div id="usage-risk" style="font-size:1.4rem;font-weight:700">—</div>
+        <div style="color:var(--muted);font-size:0.75rem">Configured risk budget</div>
+      </div>
+      <div style="background:var(--card);border-radius:8px;padding:14px;border-left:4px solid #e74c3c">
+        <div style="color:var(--muted);font-size:0.78rem;margin-bottom:4px">Max Concurrent Positions</div>
+        <div id="usage-max-active" style="font-size:1.4rem;font-weight:700">—</div>
+        <div style="color:var(--muted);font-size:0.75rem">Capped by MAX_TRADES_ACTIVE</div>
+      </div>
+    </div>
+    <div id="usage-note" style="background:var(--card);border-radius:8px;padding:14px;font-size:0.84rem;color:var(--muted)">
+      <strong style="color:var(--text)">&#x26A0;&#xFE0F; Overnight Risk = Zero</strong> — Report capital is configurable and should match the bot run settings for accurate ROI.
+    </div>
+  
+
+  <section>
+    <h2>Day-Wise Summary Table</h2>
+    <div style="overflow-x:auto">
+    <table class="trade-table" style="width:100%">
+      <thead>
+        <tr>
+          <th>Date</th><th>Day</th><th>Market Bias</th><th># Trades</th>
+          <th>Gross P&amp;L (₹)</th><th>Charges (₹)</th><th>Net P&amp;L (₹)</th>
+          <th>Session End</th><th>Notes</th>
+        </tr>
+      </thead>
+      <tbody id="summaryBody"></tbody>
+    </table>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════ TAB: DAY-WISE TRADES ═══════════ -->
+<div id="tab-daywise" class="tab-pane">
+  <section>
+    <h2>Individual Day Cards — Click to Expand</h2>
+    <div class="day-grid" id="dayGrid"></div>
+  </section>
+</div>
+
+<section id="setup-request" style="margin-top:18px;background:linear-gradient(135deg,#141b25 0%,#0f1822 100%);border:1px solid var(--border);border-radius:12px;padding:18px 16px">
+  <h2 style="margin-bottom:10px">Setup Request (NSE Equity FnO Intraday)</h2>
+  <p style="color:var(--muted);margin-bottom:6px">This strategy is built for <strong style="color:var(--text)">NSE Equity FnO universe</strong> and <strong style="color:var(--text)">intraday only</strong>.</p>
+  <p style="color:var(--muted);font-size:0.82rem;margin-bottom:12px">Fill this form once and submit through Google Form.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:10px">
+    <input id="lead-name" type="text" placeholder="Name" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text)" />
+    <input id="lead-capital" type="text" placeholder="Capital (e.g. 5L-10L)" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text)" />
+    <input id="lead-city" type="text" placeholder="City" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text)" />
+    <input id="lead-whatsapp" type="text" placeholder="WhatsApp Number" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text)" />
+    <select id="lead-time" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text)">
+      <option value="">Preferred Time</option>
+      <option value="Morning (9:00 AM - 12:00 PM)">Morning (9:00 AM - 12:00 PM)</option>
+      <option value="Early Afternoon (12:00 PM - 3:00 PM)">Early Afternoon (12:00 PM - 3:00 PM)</option>
+      <option value="Late Afternoon (3:00 PM - 6:00 PM)">Late Afternoon (3:00 PM - 6:00 PM)</option>
+      <option value="Evening (6:00 PM - 9:00 PM)">Evening (6:00 PM - 9:00 PM)</option>
+    </select>
+    <select id="lead-segment" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text)">
+      <option value="">Instrument Focus</option>
+      <option value="Fno Stocks Cash (Intraday with 5x leverage)">Fno Stocks Cash (Intraday with 5x leverage)</option>
+      <option value="NSE Stock Futures (Coming soon)" disabled>NSE Stock Futures (Coming soon)</option>
+      <option value="NSE Stock Options (Coming soon)" disabled>NSE Stock Options (Coming soon)</option>
+      <option value="Both Futures and Options (Coming soon)" disabled>Both Futures and Options (Coming soon)</option>
+    </select>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:10px">
+    <button id="lead-submit-btn" type="button" onclick="submitLeadToGoogleForm()" style="cursor:pointer;border:none;background:#2da44e;color:#0d1117;font-weight:700;padding:10px 14px;border-radius:8px">Submit to Google Form</button>
+  </div>
+  <p id="lead-submit-status" style="color:var(--muted);font-size:0.78rem;margin-top:8px;margin-bottom:0">Submit once to share your details with Jaipal and team.</p>
+  <p style="color:var(--muted);font-size:0.82rem;line-height:1.5;margin-top:8px;margin-bottom:0">For privacy, your phone number is not published on this page. Interested users can request a callback through email, and you can initiate WhatsApp from your side.</p>
+  <p style="color:var(--muted);font-size:0.82rem;margin-top:8px;margin-bottom:0">Direct contact: <a href="mailto:chaudhary.jaipal@gmail.com" style="color:var(--accent);text-decoration:none">chaudhary.jaipal@gmail.com</a></p>
+</section>
+
+<section style="margin-top:12px;background:rgba(248,81,73,0.06);border:1px solid rgba(248,81,73,0.4);border-radius:12px;padding:14px 16px">
+  <h2 style="margin-bottom:8px;color:#ff7b72">Disclaimer</h2>
+  <p style="color:var(--muted);font-size:0.84rem;line-height:1.6;margin:0">This strategy report is shared for educational and informational purposes only. Scope is restricted to NSE Equity FnO universe and intraday execution; it is not intended for overnight or positional trading. Performance shown here is based on system logic, risk management rules, and historical execution conditions. Markets are volatile and future results are not guaranteed. Anyone using this script does so at their own risk and is fully responsible for their own trading decisions, broker setup, compliance, and capital protection.</p>
+</section>
+
+<button class="setup-float-cta" type="button" onclick="scrollToSetupRequest()">Want this bot? Submit Setup Request</button>
+
+<script>
+// ═══════════════════════════ DATA ═══════════════════════════
+const fifteenDays = [
+  {
+    date: "02 Mar", day: "Mon", bias: "BEARISH",
+    sessionEnd: "14:07 ⚠️", anomaly: "Early exit at 14:07",
+    gross: 3855.38, charges: 568.98, net: 3286.40,
+    trades: [
+      { sym:"PATANJALI", side:"SELL", entry:"09:32", exit:"09:37", qty:245, ep:499.80, xp:503.90, pnl:-1095.74 },
+      { sym:"TATACONSUM", side:"SELL", entry:"10:01", exit:"14:07", qty:97, ep:1131.10, xp:1115.60, pnl:1417.01 },
+      { sym:"NHPC",       side:"SELL", entry:"10:30", exit:"14:07", qty:1228, ep:74.77, xp:72.91, pnl:2204.07 },
+      { sym:"BHEL",       side:"SELL", entry:"10:30", exit:"14:07", qty:341, ep:262.55, xp:261.85, pnl:159.37 },
+      { sym:"JUBLFOOD",   side:"SELL", entry:"10:45", exit:"14:07", qty:128, ep:507.00, xp:503.90, pnl:327.72 },
+      { sym:"TRENT",      side:"SELL", entry:"10:45", exit:"14:07", qty:20, ep:3829.90, xp:3809.80, pnl:327.32 },
+      { sym:"SUPREMEIND", side:"SELL", entry:"13:30", exit:"14:06", qty:29, ep:3933.40, xp:3932.20, pnl:-53.36 },
+    ]
+  },
+  {
+    date: "03 Mar", day: "Tue", bias: "MISSED",
+    sessionEnd: "13:34 ⚠️", anomaly: "Script started at 13:34 — missed full morning",
+    gross: 0, charges: 0, net: 0,
+    trades: []
+  },
+  {
+    date: "04 Mar", day: "Wed", bias: "BEARISH",
+    sessionEnd: "11:06 ⚠️", anomaly: "Session stopped at 11:06",
+    gross: 3502.15, charges: 737.39, net: 2764.76,
+    trades: [
+      { sym:"DLF",       side:"SELL", entry:"09:30", exit:"11:06", qty:226, ep:571.45, xp:569.10, pnl:437.57 },
+      { sym:"OBEROIRLTY",side:"SELL", entry:"09:30", exit:"11:06", qty:79,  ep:1445.70,xp:1444.20,pnl:30.30 },
+      { sym:"LODHA",     side:"SELL", entry:"09:30", exit:"11:06", qty:131, ep:930.65, xp:926.20, pnl:492.02 },
+      { sym:"TORNTPOWER",side:"SELL", entry:"09:30", exit:"11:06", qty:71,  ep:1478.30,xp:1485.00,pnl:-560.62 },
+      { sym:"BPCL",      side:"SELL", entry:"09:30", exit:"11:06", qty:319, ep:359.20, xp:359.20, pnl:-88.34 },
+      { sym:"AMBUJACEM", side:"SELL", entry:"09:30", exit:"11:06", qty:257, ep:474.60, xp:475.50, pnl:-322.31 },
+      { sym:"JINDALSTEL",side:"SELL", entry:"09:30", exit:"11:06", qty:137, ep:1196.70,xp:1181.00,pnl:2044.98 },
+      { sym:"APLAPOLLO", side:"SELL", entry:"09:30", exit:"11:06", qty:59,  ep:2162.70,xp:2148.80,pnl:727.14 },
+      { sym:"UPL",       side:"SELL", entry:"09:30", exit:"11:06", qty:2,   ep:609.05, xp:607.75, pnl:1.30 },
+      { sym:"BHEL",      side:"SELL", entry:"09:30", exit:"11:06", qty:1,   ep:253.50, xp:250.50, pnl:2.73 },
+    ]
+  },
+  {
+    date: "05 Mar", day: "Thu", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: -229.80, charges: 739.36, net: -969.16,
+    trades: [
+      { sym:"PHOENIXLTD", side:"BUY", entry:"09:30", exit:"12:44", qty:130, ep:1643.60, xp:1625.60, pnl:-2463.24 },
+      { sym:"HINDALCO",   side:"BUY", entry:"10:00", exit:"10:37", qty:97,  ep:961.00,  xp:982.30,  pnl:1984.83 },
+      { sym:"PAGEIND",    side:"BUY", entry:"10:00", exit:"12:31", qty:4,   ep:31330.00,xp:31760.00,pnl:1627.30 },
+      { sym:"NTPC",       side:"BUY", entry:"10:00", exit:"14:18", qty:650, ep:375.00,  xp:375.15,  pnl:-37.25 },
+      { sym:"PREMIERENE", side:"BUY", entry:"13:00", exit:"13:06", qty:296, ep:717.50,  xp:710.35,  pnl:-2239.24 },
+      { sym:"PAGEIND",    side:"BUY", entry:"10:00", exit:"14:01", qty:5,   ep:31330.00,xp:31330.00,pnl:-103.45 },
+      { sym:"HINDALCO",   side:"BUY", entry:"10:00", exit:"14:55", qty:98,  ep:961.00,  xp:964.50,  pnl:261.89 },
+    ]
+  },
+  {
+    date: "06 Mar", day: "Fri", bias: "MIXED",
+    sessionEnd: "15:10 ✅", anomaly: "Heavy loss day — 11/12 trades lost",
+    gross: -8029.92, charges: 1532.78, net: -9562.70,
+    trades: [
+      { sym:"MARICO",     side:"BUY",  entry:"09:30", exit:"12:04", qty:415, ep:787.50, xp:784.95, pnl:-1222.49 },
+      { sym:"TCS",        side:"BUY",  entry:"09:30", exit:"10:36", qty:105, ep:2617.10,xp:2598.00,pnl:-2150.79 },
+      { sym:"BLUESTARCO", side:"BUY",  entry:"09:45", exit:"10:25", qty:87,  ep:1957.00,xp:1938.70,pnl:-1699.97 },
+      { sym:"NMDC",       side:"BUY",  entry:"10:00", exit:"10:16", qty:1327,ep:80.19,  xp:81.69,  pnl:1904.52 },
+      { sym:"GRASIM",     side:"BUY",  entry:"10:30", exit:"10:57", qty:94,  ep:2745.00,xp:2726.20,pnl:-1906.54 },
+      { sym:"TORNTPHARM", side:"SELL", entry:"10:30", exit:"12:08", qty:88,  ep:4323.10,xp:4333.80,pnl:-1125.46 },
+      { sym:"NHPC",       side:"BUY",  entry:"10:45", exit:"10:59", qty:3801,ep:74.98,  xp:74.71,  pnl:-1175.50 },
+      { sym:"NMDC",       side:"BUY",  entry:"10:00", exit:"10:46", qty:1328,ep:80.19,  xp:80.44,  pnl:246.47 },
+      { sym:"PERSISTENT", side:"BUY",  entry:"10:30", exit:"14:57", qty:33,  ep:4781.00,xp:4765.00,pnl:-631.70 },
+      { sym:"GODREJPROP", side:"SELL", entry:"11:00", exit:"15:10", qty:97,  ep:1680.70,xp:1666.30,pnl:1291.16 },
+      { sym:"ADANIENSOL", side:"BUY",  entry:"13:15", exit:"14:50", qty:319, ep:996.60, xp:994.00, pnl:-990.51 },
+      { sym:"UNITDSPR",   side:"BUY",  entry:"13:30", exit:"13:34", qty:107, ep:1414.80,xp:1396.10,pnl:-2101.88 },
+    ]
+  },
+  {
+    date: "09 Mar", day: "Mon", bias: "BEARISH",
+    sessionEnd: "15:10 ✅", anomaly: "Only 1 trade all day",
+    gross: -2535.90, charges: 119.84, net: -2655.74,
+    trades: [
+      { sym:"BLUESTARCO", side:"SELL", entry:"09:30", exit:"10:10", qty:107, ep:1886.00, xp:1909.70, pnl:-2655.74 },
+    ]
+  },
+  {
+    date: "10 Mar", day: "Tue", bias: "BEARISH",
+    sessionEnd: "15:00 ✅", anomaly: "Regime defense triggered at 09:32",
+    gross: -3215.40, charges: 347.00, net: -3562.40,
+    trades: [
+      { sym:"AUROPHARMA", side:"BUY", entry:"09:30", exit:"09:36", qty:244, ep:1269.00, xp:1263.90, pnl:-1244.40 },
+      { sym:"MANKIND",    side:"BUY", entry:"09:30", exit:"09:45", qty:141, ep:2200.00, xp:2190.00, pnl:-1410.00 },
+      { sym:"COLPAL",     side:"BUY", entry:"10:15", exit:"15:00", qty:170, ep:2197.60, xp:2190.00, pnl:-1292.00 },
+    ]
+  },
+  {
+    date: "11 Mar", day: "Wed", bias: "MIXED",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 7714.20, charges: 2358.21, net: 5355.99,
+    trades: [
+      { sym:"JUBLFOOD",   side:"SELL", entry:"09:45", exit:"09:48", qty:836, ep:476.80, xp:478.35, pnl:-1486.21 },
+      { sym:"KALYANKJIL", side:"BUY",  entry:"09:30", exit:"10:09", qty:706, ep:401.45, xp:397.80, pnl:-2725.12 },
+      { sym:"TATAPOWER",  side:"BUY",  entry:"09:30", exit:"10:10", qty:904, ep:389.00, xp:387.80, pnl:-1257.95 },
+      { sym:"PGEL",       side:"BUY",  entry:"09:45", exit:"11:01", qty:261, ep:552.40, xp:554.15, pnl:357.65 },
+      { sym:"LAURUSLABS", side:"BUY",  entry:"10:15", exit:"13:47", qty:342, ep:1055.90,xp:1053.40,pnl:-1031.62 },
+      { sym:"COFORGE",    side:"SELL", entry:"10:00", exit:"14:52", qty:86,  ep:1132.40,xp:1113.30,pnl:1560.55 },
+      { sym:"DRREDDY",    side:"BUY",  entry:"10:30", exit:"12:34", qty:287, ep:1331.70,xp:1326.70,pnl:-1619.02 },
+      { sym:"BIOCON",     side:"BUY",  entry:"10:30", exit:"14:27", qty:890, ep:400.20, xp:399.65, pnl:-664.45 },
+      { sym:"LUPIN",      side:"BUY",  entry:"10:45", exit:"11:49", qty:180, ep:2368.20,xp:2354.30,pnl:-2701.53 },
+      { sym:"M&M",        side:"SELL", entry:"10:45", exit:"15:10", qty:86,  ep:3206.30,xp:3160.60,pnl:3784.27 },
+      { sym:"TCS",        side:"SELL", entry:"10:45", exit:"15:10", qty:27,  ep:2481.50,xp:2465.10,pnl:371.61 },
+      { sym:"CROMPTON",   side:"BUY",  entry:"13:00", exit:"13:47", qty:1237,ep:249.00, xp:247.75, pnl:-1703.60 },
+      { sym:"IRCTC",      side:"SELL", entry:"13:15", exit:"15:10", qty:964, ep:539.05, xp:535.05, pnl:3622.48 },
+      { sym:"ULTRACEMCO", side:"SELL", entry:"13:15", exit:"15:10", qty:10,  ep:11505.00,xp:11462.00,pnl:341.52 },
+      { sym:"KEI",        side:"SELL", entry:"10:15", exit:"15:10", qty:43,  ep:4426.00,xp:4327.50,pnl:4120.26 },
+      { sym:"COFORGE",    side:"SELL", entry:"10:00", exit:"15:10", qty:176, ep:1132.40,xp:1106.80,pnl:4387.15 },
+    ]
+  },
+  {
+    date: "12 Mar", day: "Thu", bias: "MIXED",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 1445.40, charges: 459.22, net: 986.18,
+    trades: [
+      { sym:"MARICO",   side:"SELL", entry:"09:30", exit:"09:49", qty:481, ep:751.45, xp:756.65, pnl:-2678.36 },
+      { sym:"GODREJCP", side:"SELL", entry:"09:30", exit:"11:39", qty:238, ep:1065.40,xp:1061.70,pnl:742.42 },
+      { sym:"ABB",      side:"BUY",  entry:"13:15", exit:"15:10", qty:42,  ep:6352.00,xp:6425.00,pnl:2922.12 },
+    ]
+  },
+  {
+    date: "13 Mar", day: "Fri", bias: "BEARISH",
+    sessionEnd: "10:27 ⚠️", anomaly: "Session ended at 10:27 — likely profit-target exit",
+    gross: 10236.15, charges: 1108.97, net: 9127.18,
+    trades: [
+      { sym:"MPHASIS",   side:"SELL", entry:"09:30", exit:"10:27", qty:135, ep:2133.50, xp:2131.20, pnl:159.90 },
+      { sym:"PAGEIND",   side:"SELL", entry:"09:45", exit:"10:27", qty:11,  ep:30415.00,xp:30220.00,pnl:1977.82 },
+      { sym:"PIDILITIND",side:"SELL", entry:"09:45", exit:"10:27", qty:283, ep:1375.30, xp:1367.00, pnl:2162.11 },
+      { sym:"BLUESTARCO",side:"SELL", entry:"09:45", exit:"10:27", qty:106, ep:1874.40, xp:1857.40, pnl:1683.58 },
+      { sym:"HINDZINC",  side:"SELL", entry:"09:45", exit:"10:27", qty:436, ep:564.40,  xp:556.75,  pnl:3200.08 },
+      { sym:"TATATECH",  side:"SELL", entry:"10:00", exit:"10:27", qty:637, ep:542.50,  xp:542.35,  pnl:-75.72 },
+      { sym:"DRREDDY",   side:"SELL", entry:"10:15", exit:"10:27", qty:284, ep:1296.50, xp:1295.80, pnl:19.41 },
+    ]
+  },
+  {
+    date: "16 Mar", day: "Mon", bias: "BEARISH",
+    sessionEnd: "10:58 ⚠️", anomaly: "Session ended at 10:58 — best net day",
+    gross: 25384.05, charges: 1385.90, net: 23998.15,
+    trades: [
+      { sym:"ALKEM",      side:"SELL", entry:"10:00", exit:"10:58", qty:54,  ep:5311.50, xp:5248.50, pnl:3252.05 },
+      { sym:"LODHA",      side:"SELL", entry:"10:00", exit:"10:55", qty:129, ep:853.45,  xp:834.10,  pnl:2409.59 },
+      { sym:"POWERGRID",  side:"SELL", entry:"10:00", exit:"10:50", qty:451, ep:298.20,  xp:292.70,  pnl:2385.18 },
+      { sym:"LODHA",      side:"SELL", entry:"10:00", exit:"10:58", qty:130, ep:853.45,  xp:837.60,  pnl:1973.61 },
+      { sym:"POWERGRID",  side:"SELL", entry:"10:00", exit:"10:58", qty:451, ep:298.20,  xp:292.90,  pnl:2294.98 },
+      { sym:"PHOENIXLTD", side:"SELL", entry:"10:15", exit:"10:58", qty:110, ep:1524.40, xp:1514.30, pnl:1003.67 },
+      { sym:"FORTIS",     side:"SELL", entry:"10:15", exit:"10:49", qty:138, ep:834.90,  xp:816.15,  pnl:2499.11 },
+      { sym:"FORTIS",     side:"SELL", entry:"10:15", exit:"10:58", qty:139, ep:834.90,  xp:814.55,  pnl:2739.98 },
+      { sym:"DLF",        side:"SELL", entry:"10:15", exit:"10:58", qty:393, ep:533.55,  xp:527.85,  pnl:2117.77 },
+      { sym:"OBEROIRLTY", side:"SELL", entry:"10:30", exit:"10:58", qty:135, ep:1419.00, xp:1404.10, pnl:1895.66 },
+      { sym:"PRESTIGE",   side:"SELL", entry:"10:30", exit:"10:58", qty:137, ep:1213.40, xp:1209.60, pnl:413.75 },
+      { sym:"TORNTPOWER", side:"SELL", entry:"10:30", exit:"10:58", qty:163, ep:1441.90, xp:1431.80, pnl:1514.82 },
+      { sym:"SUZLON",     side:"SELL", entry:"10:30", exit:"10:58", qty:4345,ep:40.85,   xp:40.94,   pnl:-502.01 },
+    ]
+  },
+  {
+    date: "17 Mar", day: "Tue", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "Mixed signals — both BUY and SELL taken",
+    gross: -6020.60, charges: 1099.51, net: -7120.11,
+    trades: [
+      { sym:"MPHASIS",   side:"SELL", entry:"09:30", exit:"10:09", qty:122, ep:2042.50, xp:2057.50, pnl:-1966.80 },
+      { sym:"OFSS",      side:"SELL", entry:"09:30", exit:"10:18", qty:36,  ep:6274.50, xp:6308.00, pnl:-1334.39 },
+      { sym:"PREMIERENE",side:"BUY",  entry:"09:45", exit:"10:30", qty:245, ep:814.00,  xp:814.00,  pnl:-118.81 },
+      { sym:"MARUTI",    side:"BUY",  entry:"09:45", exit:"10:30", qty:16,  ep:13059.00,xp:12910.00,pnl:-2505.53 },
+      { sym:"EXIDEIND",  side:"BUY",  entry:"09:45", exit:"11:26", qty:862, ep:301.50,  xp:299.50,  pnl:-1864.02 },
+      { sym:"TVSMOTOR",  side:"BUY",  entry:"09:45", exit:"11:28", qty:78,  ep:3403.50, xp:3402.50, pnl:-220.50 },
+      { sym:"LT",        side:"BUY",  entry:"11:00", exit:"12:16", qty:73,  ep:3496.60, xp:3462.30, pnl:-2642.03 },
+      { sym:"APLAPOLLO", side:"BUY",  entry:"13:15", exit:"15:10", qty:179, ep:1945.90, xp:1966.60, pnl:3531.96 },
+    ]
+  },
+  {
+    date: "18 Mar", day: "Wed", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "Only 1 trade — SL hit in 16 min",
+    gross: -2524.50, charges: 175.71, net: -2700.21,
+    trades: [
+      { sym:"EICHERMOT", side:"BUY", entry:"09:30", exit:"09:46", qty:51, ep:7057.50, xp:7008.00, pnl:-2700.21 },
+    ]
+  },
+  {
+    date: "19 Mar", day: "Thu", bias: "BEARISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 6562.60, charges: 640.61, net: 5921.99,
+    trades: [
+      { sym:"HINDUNILVR",side:"SELL", entry:"09:30", exit:"13:36", qty:128, ep:2104.20, xp:2084.70, pnl:2352.27 },
+      { sym:"FORTIS",    side:"SELL", entry:"09:30", exit:"15:10", qty:338, ep:820.00,  xp:816.35,  pnl:1087.07 },
+      { sym:"HINDUNILVR",side:"SELL", entry:"09:30", exit:"15:10", qty:129, ep:2104.20, xp:2075.30, pnl:3583.70 },
+      { sym:"NESTLEIND", side:"SELL", entry:"09:30", exit:"15:10", qty:373, ep:1184.00, xp:1186.40, pnl:-1101.03 },
+    ]
+  },
+  {
+    date: "20 Mar", day: "Fri", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "TataPower & IndusTower rejected; 3 live trades missed",
+    gross: -1313.00, charges: 184.88, net: -1497.88,
+    trades: [
+      { sym:"BIOCON", side:"BUY", entry:"13:30", exit:"14:33", qty:1010, ep:380.70, xp:379.40, pnl:-1497.88 },
+    ]
+  },
+  {
+    date: "23 Mar", day: "Mon", bias: "BEARISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 2179.83, charges: 441.59, net: 1738.24,
+    trades: [
+      { sym:"COALINDIA",  side:"SELL", entry:"10:15", exit:"10:26", qty:329,  ep:454.66,    xp:455.00,    pnl:-213.19  },
+      { sym:"PAGEIND",    side:"SELL", entry:"10:30", exit:"11:23", qty:4,    ep:31256.54,  xp:31550.00,  pnl:-1266.01 },
+      { sym:"RELIANCE",   side:"SELL", entry:"10:30", exit:"13:44", qty:107,  ep:1392.16,   xp:1402.80,   pnl:-1239.77 },
+      { sym:"JINDALSTEL", side:"SELL", entry:"09:45", exit:"14:30", qty:65,   ep:1140.64,   xp:1106.60,   pnl:2139.18  },
+      { sym:"JINDALSTEL", side:"SELL", entry:"09:45", exit:"15:10", qty:66,   ep:1140.64,   xp:1104.40,   pnl:2318.03  },
+    ]
+  },
+  {
+    date: "24 Mar", day: "Tue", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: -711.28, charges: 100.88, net: -812.17,
+    trades: [
+      { sym:"EXIDEIND", side:"BUY", entry:"13:45", exit:"13:49", qty:499, ep:300.78, xp:299.35, pnl:-812.17 },
+    ]
+  },
+  {
+    date: "25 Mar", day: "Wed", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 5943.45, charges: 1104, net: 4839,
+    trades: [
+      { sym:"LODHA", side:"BUY", entry:"09:30", exit:"10:24", qty:188, ep:753.36, xp:743.1, pnl:-2027.24 },
+      { sym:"PATANJALI", side:"BUY", entry:"10:15", exit:"12:32", qty:157, ep:477.21, xp:486.45, pnl:1376.53 },
+      { sym:"MARUTI", side:"BUY", entry:"09:45", exit:"14:07", qty:11, ep:12704.52, xp:12710.0, pnl:-37.13 },
+	  { sym:"UNOMINDA", side:"BUY", entry:"09:30", exit:"12:52", qty:67, ep:1099.60, xp:1088.30, pnl:-830.53 },
+      { sym:"TATACONSUM", side:"BUY", entry:"13:00", exit:"14:19", qty:141, ep:1062.9, xp:1063.4, pnl:-30.05 },
+      { sym:"PATANJALI", side:"BUY", entry:"10:15", exit:"15:10", qty:157, ep:477.21, xp:485.55, pnl:1235.27 },
+	  { sym:"TITAN", side:"BUY", entry:"10:00", exit:"13:08", qty:83, ep:4003.20, xp:4079.30, pnl:3920.20 },
+	  { sym:"SUNPHARMA", side:"BUY", entry:"10:15", exit:"13:08", qty:177, ep:1780.90, xp:1794.10, pnl:2336.40 },
+    ]
+  },
+  {
+    date: "27 Mar", day: "Fri", bias: "BEARISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 7671.19, charges: 339.67, net: 7331.53,
+    trades: [
+      { sym:"BDL", side:"SELL", entry:"10:00", exit:"15:10", qty:158, ep:1172.52, xp:1136.9, pnl:5514.62 },
+      { sym:"HAVELLS", side:"SELL", entry:"11:00", exit:"15:10", qty:403, ep:1238.97, xp:1233.9, pnl:1816.9 },
+    ]
+  },
+  {
+    date: "30 Mar", day: "Mon", bias: "BEARISH",
+    sessionEnd: "11:34 ✅", anomaly: "",
+    gross: 7884.99, charges: 583.03, net: 7301.97,
+    trades: [
+      { sym:"MAZDOCK", side:"SELL", entry:"10:00", exit:"11:34", qty:75, ep:2141.19, xp:2108.0, pnl:2384.78 },
+      { sym:"SUZLON", side:"SELL", entry:"10:00", exit:"11:34", qty:6741, ep:40.45, xp:40.06, pnl:2481.64 },
+      { sym:"SHREECEM", side:"SELL", entry:"10:15", exit:"11:34", qty:17, ep:23432.41, xp:23360.0, pnl:1040.87 },
+      { sym:"OBEROIRLTY", side:"SELL", entry:"10:30", exit:"11:34", qty:185, ep:1447.91, xp:1439.6, pnl:1394.68 },
+      { sym:"MAZDOCK", side:"SELL", entry:"10:00", exit:"11:34", qty:75, ep:2141.19, xp:2108.0, pnl:2384.78 },
+      { sym:"SUZLON", side:"SELL", entry:"10:00", exit:"11:34", qty:6741, ep:40.45, xp:40.06, pnl:2481.64 },
+      { sym:"SHREECEM", side:"SELL", entry:"10:15", exit:"11:34", qty:17, ep:23432.41, xp:23360.0, pnl:1040.87 },
+      { sym:"OBEROIRLTY", side:"SELL", entry:"10:30", exit:"11:34", qty:185, ep:1447.91, xp:1439.6, pnl:1394.68 },
+    ]
+  },
+  {
+    date: "01 Apr", day: "Wed", bias: "BULLISH",
+    sessionEnd: "14:48 ✅", anomaly: "",
+    gross: -311.4, charges: 131.16, net: -442.56,
+    trades: [
+      { sym:"ADANIENT", side:"BUY", entry:"10:00", exit:"13:41", qty:40, ep:1846.6, xp:1847.4, pnl:-41.73 },
+      { sym:"SWIGGY", side:"BUY", entry:"10:00", exit:"14:38", qty:202, ep:267.45, xp:265.75, pnl:-400.83 },
+    ]
+  },
+  {
+    date: "06 Apr", day: "Mon", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 12880.31, charges: 584.78, net: 12295.53,
+    trades: [
+      { sym:"BHARATFORG", side:"BUY", entry:"09:45", exit:"09:53", qty:148, ep:1671.95, xp:1655.0, pnl:-2509.05 },
+      { sym:"LODHA", side:"BUY", entry:"10:15", exit:"11:04", qty:322, ep:705.73, xp:698.0, pnl:-2488.71 },
+      { sym:"ETERNAL", side:"BUY", entry:"13:00", exit:"14:09", qty:2144, ep:233.36, xp:232.15, pnl:-2604.73 },
+      { sym:"DLF", side:"BUY", entry:"13:00", exit:"14:34", qty:552, ep:525.79, xp:526.0, pnl:113.68 },
+      { sym:"TATASTEEL", side:"BUY", entry:"13:00", exit:"15:10", qty:2284, ep:195.6, xp:196.32, pnl:1652.27 },
+      { sym:"AMBUJACEM", side:"BUY", entry:"13:00", exit:"15:10", qty:992, ep:421.82, xp:430.5, pnl:8812.8 },
+      { sym:"NBCC", side:"BUY", entry:"13:00", exit:"15:10", qty:4600, ep:83.93, xp:84.44, pnl:2332.65 },
+      { sym:"DELHIVERY", side:"BUY", entry:"13:15", exit:"15:10", qty:854, ep:429.22, xp:435.65, pnl:5874.09 },
+      { sym:"INDIGO", side:"BUY", entry:"13:30", exit:"15:10", qty:21, ep:4237.18, xp:4317.9, pnl:1697.31 },
+    ]
+  },
+  {
+    date: "07 Apr", day: "Tue", bias: "NEUTRAL",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: -1021.49, charges: 294.65, net: -1316.14,
+    trades: [
+      { sym:"JUBLFOOD", side:"SELL", entry:"09:30", exit:"09:51", qty:389, ep:430.68, xp:429.05, pnl:525.5 },
+      { sym:"CIPLA", side:"BUY", entry:"10:30", exit:"10:59", qty:324, ep:1208.71, xp:1203.6, pnl:-1841.63 },
+    ]
+  },
+  {
+    date: "08 Apr", day: "Wed", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 6247.25, charges: 677.74, net: 5569.51,
+    trades: [
+      { sym:"PREMIERENE", side:"BUY", entry:"10:45", exit:"11:35", qty:174, ep:956.62, xp:964.8, pnl:1316.48 },
+      { sym:"JUBLFOOD", side:"BUY", entry:"09:45", exit:"11:56", qty:410, ep:441.13, xp:434.8, pnl:-2706.94 },
+      { sym:"PREMIERENE", side:"BUY", entry:"10:45", exit:"13:12", qty:173, ep:956.62, xp:960.2, pnl:513.07 },
+      { sym:"KALYANKJIL", side:"BUY", entry:"10:45", exit:"14:20", qty:310, ep:438.28, xp:444.2, pnl:1739.16 },
+      { sym:"POWERINDIA", side:"BUY", entry:"10:15", exit:"14:20", qty:4, ep:25459.08, xp:25880.0, pnl:1599.43 },
+      { sym:"POWERINDIA", side:"BUY", entry:"10:15", exit:"15:10", qty:3, ep:25459.08, xp:25860.0, pnl:1127.79 },
+      { sym:"KALYANKJIL", side:"BUY", entry:"10:45", exit:"15:10", qty:309, ep:438.28, xp:445.0, pnl:1980.53 },
+    ]
+  },
+  {
+    date: "09 Apr", day: "Thu", bias: "NEUTRAL",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: -9803.56, charges: 1049.45, net: -10853.02,
+    trades: [
+      { sym:"PETRONET", side:"SELL", entry:"09:45", exit:"10:02", qty:1030, ep:264.66, xp:267.15, pnl:-2708.56 },
+      { sym:"KPITTECH", side:"SELL", entry:"10:00", exit:"10:18", qty:536, ep:706.72, xp:711.45, pnl:-2718.9 },
+      { sym:"VBL", side:"BUY", entry:"10:30", exit:"11:41", qty:394, ep:422.12, xp:425.6, pnl:1265.24 },
+      { sym:"LT", side:"SELL", entry:"10:45", exit:"11:53", qty:127, ep:3919.16, xp:3935.5, pnl:-2301.44 },
+      { sym:"SHREECEM", side:"SELL", entry:"10:00", exit:"12:29", qty:10, ep:23842.1, xp:24080.0, pnl:-2511.92 },
+      { sym:"AMBUJACEM", side:"SELL", entry:"10:00", exit:"12:33", qty:643, ep:433.12, xp:436.65, pnl:-2413.99 },
+      { sym:"VBL", side:"BUY", entry:"10:30", exit:"13:28", qty:394, ep:422.12, xp:423.75, pnl:536.56 },
+    ]
+  },
+  {
+    date: "10 Apr", day: "Fri", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: -1962.39, charges: 1866.54, net: -3828.93,
+    trades: [
+      { sym:"HEROMOTOCO", side:"BUY", entry:"09:45", exit:"10:05", qty:59, ep:5400.55, xp:5353.0, pnl:-2966.09 },
+      { sym:"POWERGRID", side:"BUY", entry:"10:45", exit:"11:31", qty:1470, ep:301.93, xp:300.25, pnl:-2669.97 },
+      { sym:"SONACOMS", side:"BUY", entry:"10:15", exit:"11:33", qty:176, ep:540.2, xp:547.35, pnl:1175.84 },
+      { sym:"CONCOR", side:"BUY", entry:"11:00", exit:"12:16", qty:597, ep:487.42, xp:483.15, pnl:-2697.32 },
+      { sym:"LAURUSLABS", side:"BUY", entry:"13:30", exit:"13:34", qty:228, ep:1093.97, xp:1097.65, pnl:702.07 },
+      { sym:"POLYCAB", side:"BUY", entry:"10:15", exit:"13:40", qty:16, ep:7714.28, xp:7790.0, pnl:1119.63 },
+      { sym:"SRF", side:"BUY", entry:"13:00", exit:"13:42", qty:101, ep:2458.34, xp:2470.2, pnl:1060.92 },
+      { sym:"MAZDOCK", side:"BUY", entry:"10:15", exit:"14:15", qty:114, ep:2484.76, xp:2461.2, pnl:-2834.22 },
+      { sym:"SRF", side:"BUY", entry:"13:00", exit:"14:15", qty:102, ep:2458.34, xp:2457.0, pnl:-274.12 },
+      { sym:"SONACOMS", side:"BUY", entry:"10:15", exit:"15:10", qty:176, ep:540.2, xp:553.2, pnl:2205.15 },
+      { sym:"POLYCAB", side:"BUY", entry:"10:15", exit:"15:10", qty:17, ep:7714.28, xp:7767.0, pnl:801.67 },
+      { sym:"SHREECEM", side:"BUY", entry:"10:30", exit:"15:10", qty:10, ep:24403.29, xp:24340.0, pnl:-767.53 },
+      { sym:"COLPAL", side:"BUY", entry:"10:45", exit:"15:10", qty:173, ep:1937.45, xp:1939.1, pnl:117.47 },
+      { sym:"LAURUSLABS", side:"BUY", entry:"13:30", exit:"15:10", qty:229, ep:1093.97, xp:1099.8, pnl:1197.56 },
+    ]
+  },
+  {
+    date: "13 Apr", day: "Mon", bias: "BEARISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 4959.24, charges: 254.54, net: 4704.7,
+    trades: [
+      { sym:"APLAPOLLO", side:"SELL", entry:"13:00", exit:"13:28", qty:111, ep:2013.29, xp:2001.0, pnl:1236.72 },
+      { sym:"APLAPOLLO", side:"SELL", entry:"13:00", exit:"15:10", qty:111, ep:2013.29, xp:1980.9, pnl:3467.98 },
+    ]
+  },
+  {
+    date: "15 Apr", day: "Wed", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 3150.28, charges: 315.74, net: 2834.54,
+    trades: [
+      { sym:"INOXWIND", side:"BUY", entry:"09:45", exit:"10:07", qty:1143, ep:92.45, xp:93.6, pnl:1229.74 },
+      { sym:"INOXWIND", side:"BUY", entry:"09:45", exit:"15:10", qty:1144, ep:92.45, xp:93.8, pnl:1459.6 },
+      { sym:"OBEROIRLTY", side:"BUY", entry:"10:45", exit:"15:10", qty:159, ep:1704.48, xp:1706.3, pnl:145.2 },
+    ]
+  },
+  {
+    date: "16 Apr", day: "Thu", bias: "NEUTRAL",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: -8674.79, charges: 1273.02, net: -9947.81,
+    trades: [
+      { sym:"VBL", side:"BUY", entry:"10:45", exit:"11:14", qty:446, ep:452.34, xp:455.35, pnl:1222.88 },
+      { sym:"POWERGRID", side:"BUY", entry:"11:15", exit:"11:45", qty:1591, ep:314.34, xp:312.9, pnl:-2510.11 },
+      { sym:"KPITTECH", side:"BUY", entry:"10:45", exit:"11:48", qty:660, ep:739.2, xp:735.0, pnl:-2996.2 },
+      { sym:"TRENT", side:"BUY", entry:"10:45", exit:"11:52", qty:59, ep:4066.05, xp:4022.2, pnl:-2719.58 },
+      { sym:"VBL", side:"BUY", entry:"10:45", exit:"11:58", qty:446, ep:452.34, xp:451.9, pnl:-315.38 },
+      { sym:"KALYANKJIL", side:"SELL", entry:"13:00", exit:"13:50", qty:1136, ep:439.52, xp:441.65, pnl:-2646.2 },
+      { sym:"ONGC", side:"SELL", entry:"13:45", exit:"15:10", qty:1766, ep:282.79, xp:282.65, pnl:16.77 },
+    ]
+  },
+  {
+    date: "17 Apr", day: "Fri", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: -1890.18, charges: 1560.45, net: -3450.63,
+    trades: [
+      { sym:"PIIND", side:"BUY", entry:"10:45", exit:"11:06", qty:114, ep:3141.75, xp:3118.8, pnl:-2791.86 },
+      { sym:"PATANJALI", side:"BUY", entry:"11:15", exit:"11:39", qty:973, ep:471.25, xp:468.65, pnl:-2744.0 },
+      { sym:"OIL", side:"BUY", entry:"13:45", exit:"13:56", qty:1067, ep:468.8, xp:466.55, pnl:-2628.29 },
+      { sym:"CONCOR", side:"BUY", entry:"13:15", exit:"14:14", qty:987, ep:506.93, xp:504.4, pnl:-2723.15 },
+      { sym:"TORNTPOWER", side:"BUY", entry:"13:45", exit:"14:18", qty:162, ep:1539.25, xp:1545.5, pnl:874.89 },
+      { sym:"BHEL", side:"BUY", entry:"13:30", exit:"14:54", qty:557, ep:313.86, xp:316.29, pnl:1245.81 },
+      { sym:"TRENT", side:"BUY", entry:"13:15", exit:"15:10", qty:121, ep:4106.88, xp:4109.8, pnl:127.85 },
+      { sym:"BHEL", side:"BUY", entry:"13:30", exit:"15:10", qty:558, ep:313.86, xp:316.75, pnl:1504.74 },
+      { sym:"TORNTPOWER", side:"BUY", entry:"13:45", exit:"15:10", qty:163, ep:1539.25, xp:1562.7, pnl:3683.37 },
+    ]
+  },
+  {
+    date: "20 Apr", day: "Mon", bias: "NEUTRAL",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 1922.18, charges: 701.23, net: 1220.95,
+    trades: [
+      { sym:"NAUKRI", side:"BUY", entry:"10:30", exit:"10:42", qty:62, ep:1061.4, xp:1071.45, pnl:552.48 },
+      { sym:"PATANJALI", side:"SELL", entry:"11:00", exit:"11:47", qty:252, ep:461.44, xp:461.3, pnl:-53.67 },
+      { sym:"NAUKRI", side:"BUY", entry:"10:30", exit:"12:06", qty:62, ep:1061.4, xp:1077.05, pnl:899.49 },
+      { sym:"AXISBANK", side:"BUY", entry:"10:17", exit:"12:15", qty:70, ep:1368.01, xp:1356.5, pnl:-886.95 },
+      { sym:"APLAPOLLO", side:"BUY", entry:"10:30", exit:"12:19", qty:36, ep:2122.0, xp:2138.3, pnl:512.0 },
+      { sym:"INDHOTEL", side:"BUY", entry:"10:30", exit:"14:00", qty:142, ep:664.4, xp:660.2, pnl:-677.3 },
+    ]
+  },
+  {
+    date: "21 Apr", day: "Tue", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: -1990.34, charges: 1420.63, net: -3410.97,
+    trades: [
+      { sym:"PHOENIXLTD", side:"BUY", entry:"09:45", exit:"09:51", qty:199, ep:1821.06, xp:1808.4, pnl:-2696.88 },
+      { sym:"INDUSTOWER", side:"BUY", entry:"10:00", exit:"10:27", qty:552, ep:415.21, xp:418.8, pnl:1850.96 },
+      { sym:"IDEA", side:"BUY", entry:"10:30", exit:"10:42", qty:35888, ep:9.73, xp:9.66, pnl:-2586.75 },
+      { sym:"DABUR", side:"BUY", entry:"10:00", exit:"10:47", qty:316, ep:448.59, xp:454.75, pnl:1849.1 },
+      { sym:"JUBLFOOD", side:"BUY", entry:"10:15", exit:"11:31", qty:623, ep:466.1, xp:462.1, pnl:-2642.31 },
+      { sym:"DABUR", side:"BUY", entry:"10:00", exit:"12:16", qty:317, ep:448.59, xp:448.2, pnl:-220.64 },
+      { sym:"EXIDEIND", side:"BUY", entry:"11:15", exit:"12:36", qty:1489, ep:335.85, xp:334.65, pnl:-2015.57 },
+      { sym:"UNOMINDA", side:"BUY", entry:"10:15", exit:"13:00", qty:175, ep:1140.86, xp:1152.7, pnl:1953.39 },
+      { sym:"INDUSTOWER", side:"BUY", entry:"10:00", exit:"14:56", qty:552, ep:415.21, xp:415.1, pnl:-190.85 },
+      { sym:"UNOMINDA", side:"BUY", entry:"10:15", exit:"15:10", qty:175, ep:1140.86, xp:1148.9, pnl:1288.58 },
+    ]
+  },
+  {
+    date: "22 Apr", day: "Wed", bias: "NEUTRAL",
+    sessionEnd: "14:54 ✅", anomaly: "",
+    gross: 2012.16, charges: 710.76, net: 1301.4,
+    trades: [
+      { sym:"BIOCON", side:"SELL", entry:"11:00", exit:"11:05", qty:697, ep:358.4, xp:359.4, pnl:-833.94 },
+      { sym:"TCS", side:"SELL", entry:"11:15", exit:"11:44", qty:59, ep:2554.04, xp:2537.6, pnl:868.72 },
+      { sym:"TATAELXSI", side:"SELL", entry:"09:30", exit:"11:48", qty:14, ep:4463.8, xp:4400.2, pnl:824.09 },
+      { sym:"TCS", side:"SELL", entry:"11:15", exit:"13:56", qty:20, ep:2554.04, xp:2544.1, pnl:144.38 },
+      { sym:"ADANIENT", side:"BUY", entry:"13:30", exit:"14:04", qty:61, ep:2259.3, xp:2253.1, pnl:-474.78 },
+      { sym:"TATAELXSI", side:"SELL", entry:"09:30", exit:"14:54", qty:5, ep:4463.8, xp:4412.0, pnl:235.29 },
+      { sym:"NBCC", side:"BUY", entry:"13:45", exit:"14:54", qty:1687, ep:94.59, xp:94.33, pnl:-542.99 },
+    ]
+  },
+  {
+    date: "23 Apr", day: "Thu", bias: "BEARISH",
+    sessionEnd: "14:47 ✅", anomaly: "",
+    gross: 17221.14, charges: 1755.18, net: 15465.96,
+    trades: [
+      { sym:"COLPAL", side:"SELL", entry:"09:30", exit:"09:39", qty:153, ep:2068.95, xp:2087.6, pnl:-3014.95 },
+      { sym:"MPHASIS", side:"SELL", entry:"10:15", exit:"11:16", qty:89, ep:2313.26, xp:2285.1, pnl:2385.62 },
+      { sym:"ADANIGREEN", side:"BUY", entry:"11:00", exit:"11:55", qty:128, ep:1212.76, xp:1233.0, pnl:2487.17 },
+      { sym:"PRESTIGE", side:"SELL", entry:"10:45", exit:"12:17", qty:312, ep:1395.05, xp:1403.2, pnl:-2745.55 },
+      { sym:"TATATECH", side:"SELL", entry:"10:30", exit:"14:23", qty:413, ep:571.12, xp:564.6, pnl:2561.61 },
+      { sym:"PHOENIXLTD", side:"SELL", entry:"13:15", exit:"14:33", qty:208, ep:1795.85, xp:1784.2, pnl:2242.48 },
+      { sym:"ADANIGREEN", side:"BUY", entry:"11:00", exit:"14:38", qty:128, ep:1212.76, xp:1212.55, pnl:-129.67 },
+      { sym:"DALBHARAT", side:"SELL", entry:"10:15", exit:"14:47", qty:205, ep:1967.02, xp:1953.8, pnl:2519.04 },
+      { sym:"MPHASIS", side:"SELL", entry:"10:15", exit:"14:47", qty:90, ep:2313.26, xp:2279.8, pnl:2889.99 },
+      { sym:"TATATECH", side:"SELL", entry:"10:30", exit:"14:47", qty:413, ep:571.12, xp:562.65, pnl:3367.01 },
+      { sym:"PGEL", side:"SELL", entry:"11:15", exit:"14:47", qty:381, ep:554.83, xp:551.05, pnl:1318.54 },
+      { sym:"PHOENIXLTD", side:"SELL", entry:"13:15", exit:"14:47", qty:209, ep:1795.85, xp:1787.4, pnl:1584.64 },
+    ]
+  },
+  {
+    date: "24 Apr", day: "Fri", bias: "BEARISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: -236.12, charges: 783.2, net: -1019.32,
+    trades: [
+      { sym:"JSWENERGY", side:"SELL", entry:"09:24", exit:"09:43", qty:100, ep:554.3, xp:544.3, pnl:941.28 },
+      { sym:"APLAPOLLO", side:"SELL", entry:"10:15", exit:"10:47", qty:52, ep:2008.1, xp:1989.0, pnl:908.58 },
+      { sym:"JSWENERGY", side:"SELL", entry:"09:24", exit:"11:06", qty:100, ep:554.3, xp:541.55, pnl:1216.39 },
+      { sym:"IDEA", side:"SELL", entry:"09:45", exit:"12:13", qty:11169, ep:9.44, xp:9.53, pnl:-1090.34 },
+      { sym:"APLAPOLLO", side:"SELL", entry:"10:15", exit:"12:19", qty:53, ep:2008.1, xp:2009.7, pnl:-170.22 },
+      { sym:"TITAN", side:"SELL", entry:"13:00", exit:"13:59", qty:40, ep:4375.0, xp:4400.0, pnl:-1110.11 },
+      { sym:"PETRONET", side:"SELL", entry:"10:00", exit:"14:22", qty:545, ep:272.81, xp:272.7, pnl:-40.63 },
+      { sym:"PGEL", side:"SELL", entry:"11:00", exit:"14:24", qty:277, ep:545.62, xp:548.2, pnl:-816.18 },
+      { sym:"POLYCAB", side:"SELL", entry:"11:00", exit:"14:33", qty:18, ep:7927.8, xp:7970.0, pnl:-858.09 },
+    ]
+  },
+];
+const fiveDays = [
+  {
+    date: "15 Apr", day: "Wed", bias: "MIXED",
+    sessionEnd: "15:11 ✅", anomaly: "Restarted intraday; Manual interrupt/restart",
+    gross: 0.0, charges: 0, net: 0.0,
+    trades: [
+
+    ]
+  },
+  {
+    date: "17 Apr", day: "Fri", bias: "MIXED",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 870.94, charges: 880.11, net: -9.17,
+    trades: [
+      { sym:"NBCC", side:"BUY", entry:"09:26", exit:"09:31", qty:3351, ep:94.15, xp:93.59, pnl:-1876.56 },
+      { sym:"COLPAL", side:"BUY", entry:"09:39", exit:"09:42", qty:117, ep:2013.4, xp:2029.7, pnl:1907.1 },
+      { sym:"CUMMINSIND", side:"BUY", entry:"09:33", exit:"09:43", qty:73, ep:5085.0, xp:5066.0, pnl:-1387.0 },
+      { sym:"UNITDSPR", side:"BUY", entry:"09:38", exit:"09:50", qty:155, ep:1275.8, xp:1290.0, pnl:2201.0 },
+      { sym:"ABB", side:"BUY", entry:"09:32", exit:"10:17", qty:24, ep:6990.0, xp:7064.0, pnl:1776.0 },
+      { sym:"TORNTPOWER", side:"BUY", entry:"09:36", exit:"11:11", qty:243, ep:1538.8, xp:1531.6, pnl:-1749.6 },
+    ]
+  },
+  {
+    date: "20 Apr", day: "Mon", bias: "MIXED",
+    sessionEnd: "15:11 ✅", anomaly: "Manual interrupt/restart",
+    gross: 1881.0, charges: 99.55, net: 1781.45,
+    trades: [
+      { sym:"TORNTPOWER", side:"BUY", entry:"09:26", exit:"10:06", qty:90, ep:1603.0, xp:1623.9, pnl:1881.0 },
+    ]
+  },
+  {
+    date: "22 Apr", day: "Wed", bias: "MIXED",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 4575.8, charges: 1384.51, net: 3191.29,
+    trades: [
+      { sym:"DRREDDY", side:"SELL", entry:"09:36", exit:"09:38", qty:309, ep:1210.0, xp:1211.8, pnl:-556.2 },
+      { sym:"EICHERMOT", side:"SELL", entry:"10:08", exit:"10:27", qty:51, ep:7155.5, xp:7177.0, pnl:-1096.5 },
+      { sym:"HINDUNILVR", side:"BUY", entry:"10:25", exit:"10:28", qty:159, ep:2352.5, xp:2358.7, pnl:985.8 },
+      { sym:"TATACONSUM", side:"BUY", entry:"09:41", exit:"10:33", qty:148, ep:1158.5, xp:1171.3, pnl:1894.4 },
+      { sym:"ADANIENSOL", side:"BUY", entry:"09:31", exit:"11:07", qty:136, ep:1285.95, xp:1300.0, pnl:1910.8 },
+      { sym:"TORNTPHARM", side:"SELL", entry:"11:24", exit:"11:33", qty:91, ep:4085.0, xp:4071.2, pnl:1255.8 },
+      { sym:"TORNTPOWER", side:"BUY", entry:"09:34", exit:"15:10", qty:130, ep:1650.3, xp:1654.0, pnl:481.0 },
+      { sym:"HINDALCO", side:"BUY", entry:"09:53", exit:"15:10", qty:241, ep:1035.15, xp:1038.25, pnl:747.1 },
+      { sym:"GODREJCP", side:"BUY", entry:"10:43", exit:"15:10", qty:327, ep:1143.1, xp:1139.9, pnl:-1046.4 },
+    ]
+  },
+  {
+    date: "23 Apr", day: "Thu", bias: "MIXED",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 8951.82, charges: 1242.77, net: 7709.05,
+    trades: [
+      { sym:"GMRAIRPORT", side:"SELL", entry:"09:33", exit:"09:41", qty:5227, ep:95.65, xp:96.14, pnl:-2561.23 },
+      { sym:"TVSMOTOR", side:"SELL", entry:"09:36", exit:"10:15", qty:30, ep:3568.1, xp:3524.0, pnl:1323.0 },
+      { sym:"TVSMOTOR", side:"SELL", entry:"09:36", exit:"10:39", qty:31, ep:3568.1, xp:3534.1, pnl:1054.0 },
+      { sym:"EICHERMOT", side:"SELL", entry:"10:49", exit:"10:56", qty:35, ep:7123.0, xp:7101.5, pnl:752.5 },
+      { sym:"DIXON", side:"SELL", entry:"09:26", exit:"11:04", qty:11, ep:11108.5, xp:11001.0, pnl:1182.5 },
+      { sym:"NAUKRI", side:"SELL", entry:"09:33", exit:"11:20", qty:135, ep:1027.05, xp:1017.7, pnl:1262.25 },
+      { sym:"DIXON", side:"SELL", entry:"09:26", exit:"11:34", qty:6, ep:11108.5, xp:10895.0, pnl:1281.0 },
+      { sym:"EICHERMOT", side:"SELL", entry:"10:49", exit:"11:40", qty:35, ep:7123.0, xp:7108.0, pnl:525.0 },
+      { sym:"HEROMOTOCO", side:"SELL", entry:"10:37", exit:"12:00", qty:53, ep:5084.0, xp:5049.0, pnl:1855.0 },
+      { sym:"DIXON", side:"SELL", entry:"09:26", exit:"15:10", qty:6, ep:11108.5, xp:10900.0, pnl:1251.0 },
+      { sym:"NAUKRI", side:"SELL", entry:"09:33", exit:"15:10", qty:136, ep:1027.05, xp:1019.5, pnl:1026.8 },
+    ]
+  },
+  {
+    date: "24 Apr", day: "Fri", bias: "MIXED",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: 10245.7, charges: 1416.82, net: 8828.88,
+    trades: [
+      { sym:"MARICO", side:"BUY", entry:"09:30", exit:"09:39", qty:456, ep:785.8, xp:780.1, pnl:-2599.2 },
+      { sym:"COFORGE", side:"SELL", entry:"09:32", exit:"09:41", qty:153, ep:1194.0, xp:1185.1, pnl:1361.7 },
+      { sym:"COFORGE", side:"SELL", entry:"09:32", exit:"09:55", qty:77, ep:1194.0, xp:1177.8, pnl:1247.4 },
+      { sym:"SUNPHARMA", side:"SELL", entry:"09:52", exit:"10:13", qty:190, ep:1641.3, xp:1635.0, pnl:1197.0 },
+      { sym:"SUNPHARMA", side:"SELL", entry:"09:52", exit:"10:26", qty:95, ep:1641.3, xp:1629.6, pnl:1111.5 },
+      { sym:"COFORGE", side:"SELL", entry:"09:32", exit:"10:35", qty:77, ep:1194.0, xp:1169.6, pnl:1878.8 },
+      { sym:"SUNPHARMA", side:"SELL", entry:"09:52", exit:"10:39", qty:95, ep:1641.3, xp:1624.1, pnl:1634.0 },
+      { sym:"TCS", side:"SELL", entry:"09:26", exit:"10:44", qty:69, ep:2477.6, xp:2450.2, pnl:1890.6 },
+      { sym:"NAUKRI", side:"SELL", entry:"09:32", exit:"10:46", qty:176, ep:1002.6, xp:995.25, pnl:1293.6 },
+      { sym:"NAUKRI", side:"SELL", entry:"09:32", exit:"11:14", qty:88, ep:1002.6, xp:988.4, pnl:1249.6 },
+      { sym:"NAUKRI", side:"SELL", entry:"09:32", exit:"11:19", qty:88, ep:1002.6, xp:992.35, pnl:902.0 },
+      { sym:"COALINDIA", side:"BUY", entry:"09:26", exit:"15:10", qty:328, ep:459.45, xp:456.8, pnl:-869.2 },
+      { sym:"SYNGENE", side:"SELL", entry:"09:41", exit:"15:10", qty:521, ep:420.95, xp:421.05, pnl:-52.1 },
+    ]
+  },
+];
+const datasets = {
+  fifteen: {
+    label: "15 Min Bot",
+    shortLabel: "15M",
+    capital: 500000,
+    leverage: 5,
+    maxTradePct: 0.25,
+    riskPerTrade: 2500,
+    maxTradesActive: 10,
+    periodLabel: "2 March 2026 – 24 April 2026",
+    tradingMode: "Paper Trading",
+    days: fifteenDays,
+  },
+  five: {
+    label: "5 Min Bot",
+    shortLabel: "5M",
+    capital: 500000,
+    leverage: 5,
+    maxTradePct: 0.25,
+    riskPerTrade: 2500,
+    maxTradesActive: 15,
+    periodLabel: "15 April 2026 – 24 April 2026",
+    tradingMode: "Paper Trading",
+    days: fiveDays,
+  },
+};
+let currentBot = "fifteen";
+function biasBadge(b) {
+  const map = {BEARISH:'tag-red',BULLISH:'tag-green',MIXED:'tag-yellow',MISSED:'tag-red'};
+  return `<span class="tag ${map[b]||'tag-blue'}">${b}</span>`;
+}
+function fmtPnl(v) {
+  return (v>=0?'+₹':'-₹') + Math.abs(v).toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function fmtInr(v) {
+  return '₹' + Number(v || 0).toLocaleString('en-IN', {maximumFractionDigits: 0});
+}
+function getCurrentDataset() {
+  return datasets[currentBot];
+}
+function getCurrentDays() {
+  return getCurrentDataset().days || [];
+}
+function setKpi(id, val, pos) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = val;
+  el.className = 'value ' + (pos === true ? 'pos' : pos === false ? 'neg' : pos || 'neu');
+}
+function updateBotChrome() {
+  const dataset = getCurrentDataset();
+  document.getElementById('page-title').textContent = `📊 Sudarshan Bot ${dataset.shortLabel} — Trade Analysis Report`;
+  document.getElementById('page-period').innerHTML = `Period: ${dataset.periodLabel} &nbsp;|&nbsp; All figures in ₹ &nbsp;|&nbsp; ${dataset.tradingMode}`;
+  document.title = `Sudarshan Bot ${dataset.shortLabel} — Trade Analysis Report`;
+  document.querySelectorAll('.bot-tab').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.bot === currentBot);
+  });
+}
+function renderKpis() {
+  const dataset = getCurrentDataset();
+  const days = getCurrentDays();
+  const totalTrades  = days.reduce((s,d) => s + d.trades.length, 0);
+  const totalGross   = days.reduce((s,d) => s + d.gross, 0);
+  const totalCharges = days.reduce((s,d) => s + d.charges, 0);
+  const totalNet     = days.reduce((s,d) => s + d.net, 0);
+  const wins         = days.filter(d => d.net > 0).length;
+  const losses       = days.filter(d => d.net < 0).length;
+  const bestDay      = days.length ? days.reduce((a,d) => d.net > a.net ? d : a, days[0]) : null;
+  const worstDay     = days.length ? days.reduce((a,d) => d.net < a.net ? d : a, days[0]) : null;
+  const tradingDays  = Math.max(days.length, 1);
+  const totalTradingDaysInYear = 252;
+  const roc = dataset.capital ? (totalNet / dataset.capital) * 100 : 0;
+  const annRoc = roc * (totalTradingDaysInYear / tradingDays);
+
+  document.getElementById('kpi-capital').textContent = fmtInr(dataset.capital);
+  document.getElementById('kpi-capital-note').textContent = `${dataset.label} configured capital`;
+  setKpi('kpi-days', days.length, null);
+  setKpi('kpi-trades', totalTrades, null);
+  setKpi('kpi-gross', fmtPnl(totalGross), totalGross >= 0);
+  setKpi('kpi-charges', totalCharges > 0 ? '−₹' + totalCharges.toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2}) : '₹0.00', false);
+  setKpi('kpi-net', fmtPnl(totalNet), totalNet >= 0);
+  setKpi('kpi-wins', wins + ' / ' + days.length, true);
+  setKpi('kpi-losses', losses + ' / ' + days.length, false);
+
+  const bd = document.getElementById('kpi-best');
+  if (bestDay) {
+    bd.innerHTML = fmtPnl(bestDay.net) + '<span style="font-size:.8rem"> (' + bestDay.date + ')</span>';
+    bd.className = 'value ' + (bestDay.net >= 0 ? 'pos' : 'neg');
+  }
+  const wd = document.getElementById('kpi-worst');
+  if (worstDay) {
+    wd.innerHTML = fmtPnl(worstDay.net) + '<span style="font-size:.8rem"> (' + worstDay.date + ')</span>';
+    wd.className = 'value ' + (worstDay.net >= 0 ? 'pos' : 'neg');
+  }
+  setKpi('kpi-roc', (roc >= 0 ? '+' : '') + roc.toFixed(2) + '%', roc >= 0);
+  setKpi('kpi-ann', (annRoc >= 0 ? '+' : '') + annRoc.toFixed(1) + '%', annRoc >= 0);
+
+  const maxNotional = dataset.capital * dataset.maxTradePct * dataset.leverage;
+  const maxMargin = dataset.capital * dataset.maxTradePct;
+  document.getElementById('usage-capital').textContent = fmtInr(dataset.capital);
+  document.getElementById('usage-leverage').innerHTML = `${dataset.leverage}&#xD7;`;
+  document.getElementById('usage-max-notional').textContent = fmtInr(maxNotional);
+  document.getElementById('usage-max-notional-note').textContent = `${Math.round(dataset.maxTradePct * 100)}% capital x ${dataset.leverage}x leverage per trade`;
+  document.getElementById('usage-margin').textContent = fmtInr(maxMargin);
+  document.getElementById('usage-risk').textContent = fmtInr(dataset.riskPerTrade);
+  document.getElementById('usage-max-active').textContent = `${dataset.maxTradesActive} trades`;
+  document.getElementById('usage-note').innerHTML = `<strong style="color:var(--text)">&#x26A0;&#xFE0F; ROI is based on configured report capital</strong> — ${dataset.label} is currently evaluated against ${fmtInr(dataset.capital)}. If you ran historical sessions with a different capital, update the report config or backfill those dates manually for perfect ROI accuracy.`;
+}
+
+const LEAD_FORM_CONFIG = {
+  formAction: 'https://docs.google.com/forms/d/e/1FAIpQLSdpgQl_Sguy3Zq9fAPj_ZNsei4YvAr-N-B39AbKiGdtYi7bdA/formResponse',
+  entry: {
+    name: 'entry.1500436845',
+    capital: 'entry.1451412566',
+    segment: 'entry.133009381',
+    city: 'entry.1337182138',
+    whatsapp: 'entry.111132295',
+    whatsappAlt: 'entry.2001229661',
+    preferredTime: 'entry.175004239',
+  },
+};
+
+function postLeadToGoogleForm(payload) {
+  const iframeId = 'lead-submit-frame';
+  let iframe = document.getElementById(iframeId);
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.id = iframeId;
+    iframe.name = iframeId;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = LEAD_FORM_CONFIG.formAction;
+  form.target = iframeId;
+  form.style.display = 'none';
+
+  const appendField = (name, value) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+  };
+
+  appendField(LEAD_FORM_CONFIG.entry.name, payload.name);
+  appendField(LEAD_FORM_CONFIG.entry.capital, payload.capital);
+  appendField(LEAD_FORM_CONFIG.entry.segment, payload.segment);
+  appendField(LEAD_FORM_CONFIG.entry.city, payload.city);
+  appendField(LEAD_FORM_CONFIG.entry.whatsapp, payload.whatsapp);
+  if (LEAD_FORM_CONFIG.entry.whatsappAlt) {
+    appendField(LEAD_FORM_CONFIG.entry.whatsappAlt, payload.whatsapp);
+  }
+  appendField(LEAD_FORM_CONFIG.entry.preferredTime, payload.preferredTime);
+  appendField('fvv', '1');
+  appendField('draftResponse', '[]');
+  appendField('pageHistory', '0');
+
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
+}
+
+function getLeadPayload() {
+  const get = (id) => (document.getElementById(id)?.value || '').trim();
+  return {
+    name: get('lead-name'),
+    capital: get('lead-capital'),
+    segment: get('lead-segment'),
+    city: get('lead-city'),
+    whatsapp: get('lead-whatsapp'),
+    preferredTime: get('lead-time'),
+  };
+}
+
+function setLeadFieldError(id, hasError) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.borderColor = hasError ? '#f85149' : 'var(--border)';
+  el.style.boxShadow = hasError ? '0 0 0 2px rgba(248,81,73,0.2)' : 'none';
+}
+
+function validateLeadPayload(payload) {
+  const allowedTimes = new Set([
+    'Morning (9:00 AM - 12:00 PM)',
+    'Early Afternoon (12:00 PM - 3:00 PM)',
+    'Late Afternoon (3:00 PM - 6:00 PM)',
+    'Evening (6:00 PM - 9:00 PM)',
+  ]);
+  const required = [
+    ['lead-name', payload.name],
+    ['lead-capital', payload.capital],
+    ['lead-segment', payload.segment],
+    ['lead-city', payload.city],
+    ['lead-whatsapp', payload.whatsapp],
+    ['lead-time', payload.preferredTime],
+  ];
+
+  let missingCount = 0;
+  required.forEach(([id, value]) => {
+    const missing = !value;
+    if (missing) missingCount += 1;
+    setLeadFieldError(id, missing);
+  });
+  if (missingCount > 0) return false;
+
+  const nameOk = /^[A-Za-z .'-]{2,60}$/.test(payload.name);
+  const cityOk = /^[A-Za-z .'-]{2,60}$/.test(payload.city);
+  const whatsappDigits = payload.whatsapp.replace(/[^0-9]/g, '');
+  const whatsappOk = /^\+?[0-9\s-]{10,18}$/.test(payload.whatsapp) && whatsappDigits.length >= 10 && whatsappDigits.length <= 15;
+  const capitalOk = payload.capital.length >= 2 && payload.capital.length <= 40;
+  const timeOk = allowedTimes.has(payload.preferredTime);
+
+  setLeadFieldError('lead-name', !nameOk);
+  setLeadFieldError('lead-city', !cityOk);
+  setLeadFieldError('lead-whatsapp', !whatsappOk);
+  setLeadFieldError('lead-capital', !capitalOk);
+  setLeadFieldError('lead-time', !timeOk);
+
+  return nameOk && cityOk && whatsappOk && capitalOk && timeOk;
+}
+
+function validateLeadConfig() {
+  if (!LEAD_FORM_CONFIG.formAction.includes('/formResponse')) return false;
+  const vals = Object.values(LEAD_FORM_CONFIG.entry);
+  return vals.every((v) => v.startsWith('entry.'));
+}
+
+async function submitLeadToGoogleForm() {
+  const status = document.getElementById('lead-submit-status');
+  const btn = document.getElementById('lead-submit-btn');
+  if (!validateLeadConfig()) {
+    status.textContent = 'Google Form is not configured yet. Please update formAction and entry IDs in LEAD_FORM_CONFIG.';
+    status.style.color = '#f0883e';
+    return;
+  }
+
+  const payload = getLeadPayload();
+  if (!validateLeadPayload(payload)) {
+    status.textContent = 'Please fill valid details. Name/City should be text, WhatsApp should be 10-15 digits, and pick Preferred Time from the list.';
+    status.style.color = '#f0883e';
+    return;
+  }
+  if (btn) {
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    btn.textContent = 'Submitting...';
+  }
+  try {
+    postLeadToGoogleForm(payload);
+    status.textContent = 'Submitted to Google Form. Jaipal & Team will reach you for further instruction to configure this bot at your laptop.';
+    status.style.color = '#3fb950';
+  } catch (err) {
+    status.textContent = 'Submission failed. Please email directly to chaudhary.jaipal@gmail.com.';
+    status.style.color = '#f85149';
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.textContent = 'Submit to Google Form';
+    }
+  }
+}
+
+function toDatedSeries(rows) {
+  const monthMap = {Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11};
+  let year = 2026;
+  let prevMonth = -1;
+  return rows.map((d) => {
+    const parts = d.date.split(' ');
+    const dayNum = parseInt(parts[0], 10);
+    const monthNum = monthMap[parts[1]];
+    if (prevMonth !== -1 && monthNum < prevMonth) year += 1;
+    prevMonth = monthNum;
+    return { ...d, dt: new Date(year, monthNum, dayNum) };
+  });
+}
+
+function isoWeekNumber(dt) {
+  const date = new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate()));
+  const dayNum = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+}
+
+function groupByPeriod(rows, keyFn, labelFn) {
+  const map = new Map();
+  rows.forEach((r) => {
+    const key = keyFn(r);
+    if (!map.has(key)) {
+      map.set(key, { label: labelFn(r), net: 0, days: 0, first: r.dt, last: r.dt });
+    }
+    const acc = map.get(key);
+    acc.net += r.net;
+    acc.days += 1;
+    if (r.dt < acc.first) acc.first = r.dt;
+    if (r.dt > acc.last) acc.last = r.dt;
+  });
+  return Array.from(map.values()).sort((a, b) => a.first - b.first);
+}
+
+function renderPeriodPnl() {
+  const dated = toDatedSeries(getCurrentDays());
+  const weekly = groupByPeriod(
+    dated,
+    (r) => `${r.dt.getFullYear()}-W${String(isoWeekNumber(r.dt)).padStart(2, '0')}`,
+    (r) => `W${String(isoWeekNumber(r.dt)).padStart(2, '0')} ${r.dt.getFullYear()}`,
+  );
+  const monthly = groupByPeriod(
+    dated,
+    (r) => `${r.dt.getFullYear()}-${String(r.dt.getMonth() + 1).padStart(2, '0')}`,
+    (r) => r.dt.toLocaleString('en-IN', { month: 'short', year: 'numeric' }),
+  );
+
+  const weeklyBody = document.getElementById('weeklyBody');
+  const monthlyBody = document.getElementById('monthlyBody');
+  weeklyBody.innerHTML = '';
+  monthlyBody.innerHTML = '';
+
+  weekly.forEach((w) => {
+    const cls = w.net >= 0 ? 'pnl-pos' : 'pnl-neg';
+    weeklyBody.innerHTML += `<tr><td>${w.label}</td><td>${w.days}</td><td class="${cls}">${fmtPnl(w.net)}</td></tr>`;
+  });
+  monthly.forEach((m) => {
+    const cls = m.net >= 0 ? 'pnl-pos' : 'pnl-neg';
+    monthlyBody.innerHTML += `<tr><td>${m.label}</td><td>${m.days}</td><td class="${cls}">${fmtPnl(m.net)}</td></tr>`;
+  });
+
+  if (weekly.length) {
+    const bestW = weekly.reduce((a, b) => (b.net > a.net ? b : a), weekly[0]);
+    const worstW = weekly.reduce((a, b) => (b.net < a.net ? b : a), weekly[0]);
+    document.getElementById('wk-best').textContent = `${bestW.label}: ${fmtPnl(bestW.net)}`;
+    document.getElementById('wk-best').className = bestW.net >= 0 ? 'pnl-pos' : 'pnl-neg';
+    document.getElementById('wk-worst').textContent = `${worstW.label}: ${fmtPnl(worstW.net)}`;
+    document.getElementById('wk-worst').className = worstW.net >= 0 ? 'pnl-pos' : 'pnl-neg';
+  }
+
+  if (monthly.length) {
+    const bestM = monthly.reduce((a, b) => (b.net > a.net ? b : a), monthly[0]);
+    const worstM = monthly.reduce((a, b) => (b.net < a.net ? b : a), monthly[0]);
+    document.getElementById('mo-best').textContent = `${bestM.label}: ${fmtPnl(bestM.net)}`;
+    document.getElementById('mo-best').className = bestM.net >= 0 ? 'pnl-pos' : 'pnl-neg';
+    document.getElementById('mo-worst').textContent = `${worstM.label}: ${fmtPnl(worstM.net)}`;
+    document.getElementById('mo-worst').className = worstM.net >= 0 ? 'pnl-pos' : 'pnl-neg';
+  }
+}
+function renderSummaryTable() {
+  const days = getCurrentDays();
+  const summaryBody = document.getElementById('summaryBody');
+  summaryBody.innerHTML = '';
+  days.forEach(d => {
+    const pnlClass = d.net > 0 ? 'pnl-pos' : d.net < 0 ? 'pnl-neg' : 'pnl-zero';
+    const grossCls = d.gross > 0 ? 'pnl-pos' : d.gross < 0 ? 'pnl-neg' : 'pnl-zero';
+    summaryBody.innerHTML += `
+      <tr>
+        <td><strong>${d.date}</strong></td>
+        <td>${d.day}</td>
+        <td>${biasBadge(d.bias)}</td>
+        <td style="text-align:center">${d.trades.length || '–'}</td>
+        <td class="${grossCls}">${fmtPnl(d.gross)}</td>
+        <td style="color:var(--muted)">${d.charges > 0 ? '−₹' + d.charges.toFixed(0) : '–'}</td>
+        <td class="${pnlClass}" style="font-weight:700">${fmtPnl(d.net)}</td>
+        <td>${d.sessionEnd}</td>
+        <td style="font-size:0.75rem; color:var(--muted)">${d.anomaly || '—'}</td>
+      </tr>`;
+  });
+  const totalGross = days.reduce((a,d) => a + d.gross, 0);
+  const totalCharges = days.reduce((a,d) => a + d.charges, 0);
+  const totalNet = days.reduce((a,d) => a + d.net, 0);
+  summaryBody.innerHTML += `
+    <tr style="background:rgba(88,166,255,.08); font-weight:700; border-top:2px solid var(--accent)">
+      <td colspan="4" style="text-align:right; color:var(--accent)">TOTAL (${days.length} days)</td>
+      <td class="${totalGross>0?'pnl-pos':'pnl-neg'}">${fmtPnl(totalGross)}</td>
+      <td style="color:var(--muted)">${totalCharges > 0 ? '−₹' + totalCharges.toFixed(0) : '–'}</td>
+      <td class="${totalNet>0?'pnl-pos':'pnl-neg'}">${fmtPnl(totalNet)}</td>
+      <td colspan="2"></td>
+    </tr>`;
+}
+function renderHeatmap() {
+  const days = getCurrentDays();
+  const heatmap = document.getElementById('heatmap');
+  heatmap.innerHTML = '';
+  const maxAbs = Math.max(...days.map(x => Math.abs(x.net)), 1);
+  days.forEach((d, i) => {
+    const intensity = Math.min(Math.abs(d.net) / maxAbs, 1);
+    const bgColor = d.net === 0
+      ? 'rgba(88,166,255,0.08)'
+      : d.net > 0
+        ? `rgba(63,185,80,${0.1 + intensity*0.55})`
+        : `rgba(248,81,73,${0.1 + intensity*0.55})`;
+    const textColor = d.net > 0 ? '#3fb950' : d.net < 0 ? '#f85149' : '#58a6ff';
+    heatmap.innerHTML += `
+      <div class="hm-cell" style="background:${bgColor}; border-color:${textColor}33"
+           onclick="showTab('daywise'); scrollToDay(${i})">
+        <div class="hm-date">${d.date}</div>
+        <div class="hm-val" style="color:${textColor}">${d.net===0?'₹0':fmtPnl(d.net)}</div>
+      </div>`;
+  });
+}
+function renderDayCards() {
+  const days = getCurrentDays();
+  const dayGrid = document.getElementById('dayGrid');
+  dayGrid.innerHTML = '';
+  days.forEach((d, idx) => {
+    const netCls = d.net > 0 ? 'badge-pos' : d.net < 0 ? 'badge-neg' : 'badge-zero';
+    let tradesHtml = '';
+    if (d.trades.length > 0) {
+      tradesHtml += `<table class="trade-table">
+        <thead><tr><th>Symbol</th><th>Side</th><th>Entry Time</th><th>Exit Time</th><th>Qty</th><th>Entry ₹</th><th>Exit ₹</th><th>P&amp;L ₹</th></tr></thead>
+        <tbody>`;
+      d.trades.forEach(t => {
+        const pc = t.pnl > 0 ? 'pnl-pos' : t.pnl < 0 ? 'pnl-neg' : 'pnl-zero';
+        const sc = t.side === 'BUY' ? 'side-buy' : 'side-sell';
+        tradesHtml += `<tr>
+          <td style="font-weight:600">${t.sym}</td>
+          <td class="${sc}">${t.side}</td>
+          <td>${t.entry}</td>
+          <td>${t.exit}</td>
+          <td>${t.qty.toLocaleString()}</td>
+          <td>${t.ep.toFixed(2)}</td>
+          <td>${t.xp.toFixed(2)}</td>
+          <td class="${pc}" style="font-weight:700">${t.pnl>=0?'+₹':'-₹'}${Math.abs(t.pnl).toFixed(2)}</td> 
+        </tr>`;
+      });
+      tradesHtml += `</tbody></table>`;
+      tradesHtml += `<div class="trade-table" style="display:flex;gap:16px;padding:8px 0;font-size:0.8rem">
+        <span style="color:var(--muted)">Gross: <strong>${fmtPnl(d.gross)}</strong></span>
+        <span style="color:var(--muted)">Charges: <strong>₹${d.charges.toFixed(2)}</strong></span>
+        <span style="color:${d.net>=0?'var(--green)':'var(--red)'}">NET: <strong>${fmtPnl(d.net)}</strong></span>
+      </div>`;
+    } else {
+      tradesHtml = `<p style="color:var(--muted); font-size:0.82rem; padding:8px 0">⚠️ No trades captured in the final summary for this session.</p>`;
+    }
+
+    dayGrid.innerHTML += `
+      <div class="day-card" id="day-${idx}">
+        <div class="card-header" onclick="toggleCard(${idx})">
+          <div class="date-label">${d.date} (${d.day})</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="net-badge ${netCls}">${fmtPnl(d.net)}</span>
+            <span class="toggle-arrow" id="arrow-${idx}">▶</span>
+          </div>
+        </div>
+        <div class="card-meta">
+          <span>${biasBadge(d.bias)}</span>
+          <span>📊 ${d.trades.length} trade${d.trades.length!==1?'s':''}</span>
+          <span>🕐 End: ${d.sessionEnd}</span>
+          ${d.anomaly ? `<span style="color:var(--yellow)">⚠️ ${d.anomaly}</span>` : ''}
+        </div>
+        <div class="card-body" id="body-${idx}">${tradesHtml}</div>
+      </div>`;
+  });
+}
+
+function toggleCard(idx) {
+  const body = document.getElementById('body-' + idx);
+  const arrow = document.getElementById('arrow-' + idx);
+  const open = body.classList.toggle('open');
+  arrow.classList.toggle('open', open);
+}
+
+function scrollToDay(idx) {
+  setTimeout(() => {
+    const el = document.getElementById('day-' + idx);
+    if (el) { el.scrollIntoView({behavior:'smooth', block:'center'}); toggleCard(idx); }
+  }, 100);
+}
+
+// ═══════════════════════════ CHART ═══════════════════════════
+function renderChart() {
+  const days = getCurrentDays();
+  const canvas = document.getElementById('pnlChart');
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const labels = days.map(d => d.date);
+  const nets   = days.map(d => d.net);
+  let cumPnl = 0;
+  const cumData = nets.map(n => { cumPnl += n; return +cumPnl.toFixed(2); });
+  const barColors = nets.map(n => n >= 0 ? 'rgba(63,185,80,0.7)' : 'rgba(248,81,73,0.7)');
+
+  const W = canvas.offsetWidth || 900;
+  canvas.width = W * window.devicePixelRatio;
+  canvas.height = 280 * window.devicePixelRatio;
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+  const padL = 70, padR = 20, padT = 30, padB = 50;
+  const w = W - padL - padR;
+  const h = 280 - padT - padB;
+  const n = days.length;
+  const barW = (w / n) * 0.45;
+
+  const allVals = [...nets, ...cumData];
+  const minV = Math.min(...allVals);
+  const maxV = Math.max(...allVals);
+  const range = maxV - minV || 1;
+  const scale = v => padT + h - ((v - minV) / range) * h;
+  const zero = scale(0);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(48,54,61,0.8)';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 5; i++) {
+    const y = padT + (h / 5) * i;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + w, y); ctx.stroke();
+    const val = maxV - (range / 5) * i;
+    ctx.fillStyle = '#8b949e'; ctx.font = '10px Segoe UI';
+    ctx.textAlign = 'right';
+    ctx.fillText((val >= 0 ? '+' : '') + Math.round(val / 1000) + 'K', padL - 5, y + 3);
+  }
+
+  // Zero line
+  ctx.strokeStyle = 'rgba(88,166,255,0.4)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(padL, zero); ctx.lineTo(padL + w, zero); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Bars
+  days.forEach((d, i) => {
+    const x = padL + (w / n) * i + (w / n) * 0.5 - barW / 2;
+    const y0 = scale(Math.max(d.net, 0));
+    const y1 = scale(Math.min(d.net, 0));
+    ctx.fillStyle = barColors[i];
+    ctx.fillRect(x, d.net >= 0 ? y0 : zero, barW, Math.abs(y1 - y0) || 2);
+  });
+
+  // Cumulative line
+  ctx.strokeStyle = '#58a6ff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  cumData.forEach((v, i) => {
+    const x = padL + (w / n) * i + (w / n) * 0.5;
+    const y = scale(v);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Dots
+  cumData.forEach((v, i) => {
+    const x = padL + (w / n) * i + (w / n) * 0.5;
+    const y = scale(v);
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#58a6ff';
+    ctx.fill();
+  });
+
+  // X-axis labels
+  ctx.fillStyle = '#8b949e'; ctx.font = '10px Segoe UI'; ctx.textAlign = 'center';
+  days.forEach((d, i) => {
+    const x = padL + (w / n) * i + (w / n) * 0.5;
+    ctx.fillText(d.date, x, padT + h + 16);
+  });
+
+  // Legend
+  ctx.fillStyle = 'rgba(63,185,80,0.7)'; ctx.fillRect(padL, padT - 20, 12, 10);
+  ctx.fillStyle = '#e6edf3'; ctx.font = '10px Segoe UI'; ctx.textAlign = 'left';
+  ctx.fillText('Daily P&L', padL + 15, padT - 12);
+  ctx.strokeStyle = '#58a6ff'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(padL + 90, padT - 16); ctx.lineTo(padL + 102, padT - 16); ctx.stroke();
+  ctx.fillText('Cumulative P&L', padL + 105, padT - 12);
+}
+function renderBotReport() {
+  updateBotChrome();
+  renderKpis();
+  renderSummaryTable();
+  renderPeriodPnl();
+  renderHeatmap();
+  renderDayCards();
+  renderChart();
+}
+
+// ═══════════════════════════ TABS ═══════════════════════════
+function scrollToSetupRequest() {
+  const formSection = document.getElementById('setup-request');
+  if (formSection) {
+    formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+function showBotTab(botKey) {
+  if (!datasets[botKey]) return;
+  currentBot = botKey;
+  renderBotReport();
+}
+
+function showTab(id) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  const btns = document.querySelectorAll('.tab-btn');
+  const map = {overview:0, daywise:1};
+  if (map[id] !== undefined) btns[map[id]].classList.add('active');
+}
+renderBotReport();
+</script>
+</body>
+</html>
