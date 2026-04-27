@@ -327,8 +327,7 @@
 <header>
   <div class="header-bar">
     <div class="header-copy">
-      <h1 id="page-title">📊 Sudarshan Bot — Trade Analysis Report</h1>
-      <p id="page-period">Period: 2 March 2026 – 24 April 2026 &nbsp;|&nbsp; All figures in ₹ &nbsp;|&nbsp; Paper Trading</p>
+      <h1>📊 Sudarshan Bots Trade Summary</h1>
     </div>
     <a class="header-cta" href="https://signup.fyers.in/?utm-source=AP-Leads&utm-medium=AP4561" target="_blank" rel="noopener noreferrer">
       Open FYERS Account
@@ -337,8 +336,9 @@
 </header>
 
 <div class="bot-switch">
-  <button class="bot-tab active" type="button" data-bot="fifteen" onclick="showBotTab('fifteen')">15 Min Bot</button>
-  <button class="bot-tab" type="button" data-bot="five" onclick="showBotTab('five')">5 Min Bot</button>
+  <button class="bot-tab active" type="button" data-bot="fifteen" onclick="showBotTab('fifteen')">Sudarshan 15M</button>
+  <button class="bot-tab" type="button" data-bot="five" onclick="showBotTab('five')">Sudarshan 5M</button>
+  <p id="page-period" style="flex-basis: 100%; color: var(--muted); font-size: 0.85rem; margin: 6px 0 14px 0;">Period: 2 March 2026 – 24 April 2026 &nbsp;|&nbsp; All figures in ₹ &nbsp;|&nbsp; Paper Trading</p>
 </div>
 
 <!-- ─── KPI Strip ─── -->
@@ -1161,7 +1161,7 @@ const fiveDays = [
 ];
 const datasets = {
   fifteen: {
-    label: "15 Min Bot",
+    label: "Sudarshan 15M Bot",
     shortLabel: "15M",
     capital: 500000,
     leverage: 5,
@@ -1173,7 +1173,7 @@ const datasets = {
     days: fifteenDays,
   },
   five: {
-    label: "5 Min Bot",
+    label: "Sudarshan 5M Bot",
     shortLabel: "5M",
     capital: 500000,
     leverage: 5,
@@ -1210,9 +1210,8 @@ function setKpi(id, val, pos) {
 }
 function updateBotChrome() {
   const dataset = getCurrentDataset();
-  document.getElementById('page-title').textContent = `📊 Sudarshan Bot ${dataset.shortLabel} — Trade Analysis Report`;
   document.getElementById('page-period').innerHTML = `Period: ${dataset.periodLabel} &nbsp;|&nbsp; All figures in ₹ &nbsp;|&nbsp; ${dataset.tradingMode}`;
-  document.title = `Sudarshan Bot ${dataset.shortLabel} — Trade Analysis Report`;
+  document.title = `${dataset.label} — Trade Analysis Report`;
   document.querySelectorAll('.bot-tab').forEach((btn) => {
     btn.classList.toggle('active', btn.dataset.bot === currentBot);
   });
