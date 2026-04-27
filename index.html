@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sudarshan Bot 15M — Trade Analysis Report (Mar 2–Apr 24, 2026)</title>
+  <title>Sudarshan Bot 15M — Trade Analysis Report (Mar 2–Apr 27, 2026)</title>
   <style>
     :root {
       --bg: #0d1117;
@@ -338,7 +338,7 @@
 <div class="bot-switch">
   <button class="bot-tab active" type="button" data-bot="fifteen" onclick="showBotTab('fifteen')">Sudarshan 15M</button>
   <button class="bot-tab" type="button" data-bot="five" onclick="showBotTab('five')">Sudarshan 5M</button>
-  <p id="page-period" style="flex-basis: 100%; color: var(--muted); font-size: 0.85rem; margin: 6px 0 14px 0;">Period: 2 March 2026 – 24 April 2026 &nbsp;|&nbsp; All figures in ₹ &nbsp;|&nbsp; Paper Trading</p>
+  <p id="page-period" style="flex-basis: 100%; color: var(--muted); font-size: 0.85rem; margin: 6px 0 14px 0;">Period: 2 March 2026 – 27 April 2026 &nbsp;|&nbsp; All figures in ₹ &nbsp;|&nbsp; Paper Trading</p>
 </div>
 
 <!-- ─── KPI Strip ─── -->
@@ -606,6 +606,7 @@
 <script>
 // ═══════════════════════════ DATA ═══════════════════════════
 const fifteenDays = [
+
   {
     date: "02 Mar", day: "Mon", bias: "BEARISH",
     sessionEnd: "14:07 ⚠️", anomaly: "Early exit at 14:07",
@@ -1073,91 +1074,21 @@ const fifteenDays = [
       { sym:"POLYCAB", side:"SELL", entry:"11:00", exit:"14:33", qty:18, ep:7927.8, xp:7970.0, pnl:-858.09 },
     ]
   },
+  {
+    date: "27 Apr", day: "Mon", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: -1980.11, charges: 462.35, net: -2442.46,
+    trades: [
+      { sym:"AMBUJACEM", side:"BUY", entry:"09:45", exit:"10:23", qty:277, ep:459.8, xp:456.05, pnl:-1131.38 },
+      { sym:"AMBER", side:"BUY", entry:"10:00", exit:"13:42", qty:12, ep:7982.5, xp:8043.5, pnl:650.19 },
+      { sym:"NHPC", side:"BUY", entry:"10:30", exit:"13:45", qty:2261, ep:82.61, xp:82.15, pnl:-1154.02 },
+      { sym:"LODHA", side:"BUY", entry:"13:30", exit:"14:35", qty:116, ep:872.8, xp:863.0, pnl:-1220.02 },
+      { sym:"HAVELLS", side:"BUY", entry:"11:00", exit:"14:35", qty:95, ep:1271.7, xp:1277.0, pnl:412.78 },
+    ]
+  },
 ];
 const fiveDays = [
-  {
-    date: "15 Apr", day: "Wed", bias: "MIXED",
-    sessionEnd: "15:11 ✅", anomaly: "Restarted intraday; Manual interrupt/restart",
-    gross: 0.0, charges: 0, net: 0.0,
-    trades: [
 
-    ]
-  },
-  {
-    date: "17 Apr", day: "Fri", bias: "MIXED",
-    sessionEnd: "15:10 ✅", anomaly: "",
-    gross: 870.94, charges: 880.11, net: -9.17,
-    trades: [
-      { sym:"NBCC", side:"BUY", entry:"09:26", exit:"09:31", qty:3351, ep:94.15, xp:93.59, pnl:-1876.56 },
-      { sym:"COLPAL", side:"BUY", entry:"09:39", exit:"09:42", qty:117, ep:2013.4, xp:2029.7, pnl:1907.1 },
-      { sym:"CUMMINSIND", side:"BUY", entry:"09:33", exit:"09:43", qty:73, ep:5085.0, xp:5066.0, pnl:-1387.0 },
-      { sym:"UNITDSPR", side:"BUY", entry:"09:38", exit:"09:50", qty:155, ep:1275.8, xp:1290.0, pnl:2201.0 },
-      { sym:"ABB", side:"BUY", entry:"09:32", exit:"10:17", qty:24, ep:6990.0, xp:7064.0, pnl:1776.0 },
-      { sym:"TORNTPOWER", side:"BUY", entry:"09:36", exit:"11:11", qty:243, ep:1538.8, xp:1531.6, pnl:-1749.6 },
-    ]
-  },
-  {
-    date: "20 Apr", day: "Mon", bias: "MIXED",
-    sessionEnd: "15:11 ✅", anomaly: "Manual interrupt/restart",
-    gross: 1881.0, charges: 99.55, net: 1781.45,
-    trades: [
-      { sym:"TORNTPOWER", side:"BUY", entry:"09:26", exit:"10:06", qty:90, ep:1603.0, xp:1623.9, pnl:1881.0 },
-    ]
-  },
-  {
-    date: "22 Apr", day: "Wed", bias: "MIXED",
-    sessionEnd: "15:10 ✅", anomaly: "",
-    gross: 4575.8, charges: 1384.51, net: 3191.29,
-    trades: [
-      { sym:"DRREDDY", side:"SELL", entry:"09:36", exit:"09:38", qty:309, ep:1210.0, xp:1211.8, pnl:-556.2 },
-      { sym:"EICHERMOT", side:"SELL", entry:"10:08", exit:"10:27", qty:51, ep:7155.5, xp:7177.0, pnl:-1096.5 },
-      { sym:"HINDUNILVR", side:"BUY", entry:"10:25", exit:"10:28", qty:159, ep:2352.5, xp:2358.7, pnl:985.8 },
-      { sym:"TATACONSUM", side:"BUY", entry:"09:41", exit:"10:33", qty:148, ep:1158.5, xp:1171.3, pnl:1894.4 },
-      { sym:"ADANIENSOL", side:"BUY", entry:"09:31", exit:"11:07", qty:136, ep:1285.95, xp:1300.0, pnl:1910.8 },
-      { sym:"TORNTPHARM", side:"SELL", entry:"11:24", exit:"11:33", qty:91, ep:4085.0, xp:4071.2, pnl:1255.8 },
-      { sym:"TORNTPOWER", side:"BUY", entry:"09:34", exit:"15:10", qty:130, ep:1650.3, xp:1654.0, pnl:481.0 },
-      { sym:"HINDALCO", side:"BUY", entry:"09:53", exit:"15:10", qty:241, ep:1035.15, xp:1038.25, pnl:747.1 },
-      { sym:"GODREJCP", side:"BUY", entry:"10:43", exit:"15:10", qty:327, ep:1143.1, xp:1139.9, pnl:-1046.4 },
-    ]
-  },
-  {
-    date: "23 Apr", day: "Thu", bias: "MIXED",
-    sessionEnd: "15:10 ✅", anomaly: "",
-    gross: 8951.82, charges: 1242.77, net: 7709.05,
-    trades: [
-      { sym:"GMRAIRPORT", side:"SELL", entry:"09:33", exit:"09:41", qty:5227, ep:95.65, xp:96.14, pnl:-2561.23 },
-      { sym:"TVSMOTOR", side:"SELL", entry:"09:36", exit:"10:15", qty:30, ep:3568.1, xp:3524.0, pnl:1323.0 },
-      { sym:"TVSMOTOR", side:"SELL", entry:"09:36", exit:"10:39", qty:31, ep:3568.1, xp:3534.1, pnl:1054.0 },
-      { sym:"EICHERMOT", side:"SELL", entry:"10:49", exit:"10:56", qty:35, ep:7123.0, xp:7101.5, pnl:752.5 },
-      { sym:"DIXON", side:"SELL", entry:"09:26", exit:"11:04", qty:11, ep:11108.5, xp:11001.0, pnl:1182.5 },
-      { sym:"NAUKRI", side:"SELL", entry:"09:33", exit:"11:20", qty:135, ep:1027.05, xp:1017.7, pnl:1262.25 },
-      { sym:"DIXON", side:"SELL", entry:"09:26", exit:"11:34", qty:6, ep:11108.5, xp:10895.0, pnl:1281.0 },
-      { sym:"EICHERMOT", side:"SELL", entry:"10:49", exit:"11:40", qty:35, ep:7123.0, xp:7108.0, pnl:525.0 },
-      { sym:"HEROMOTOCO", side:"SELL", entry:"10:37", exit:"12:00", qty:53, ep:5084.0, xp:5049.0, pnl:1855.0 },
-      { sym:"DIXON", side:"SELL", entry:"09:26", exit:"15:10", qty:6, ep:11108.5, xp:10900.0, pnl:1251.0 },
-      { sym:"NAUKRI", side:"SELL", entry:"09:33", exit:"15:10", qty:136, ep:1027.05, xp:1019.5, pnl:1026.8 },
-    ]
-  },
-  {
-    date: "24 Apr", day: "Fri", bias: "MIXED",
-    sessionEnd: "15:10 ✅", anomaly: "",
-    gross: 10245.7, charges: 1416.82, net: 8828.88,
-    trades: [
-      { sym:"MARICO", side:"BUY", entry:"09:30", exit:"09:39", qty:456, ep:785.8, xp:780.1, pnl:-2599.2 },
-      { sym:"COFORGE", side:"SELL", entry:"09:32", exit:"09:41", qty:153, ep:1194.0, xp:1185.1, pnl:1361.7 },
-      { sym:"COFORGE", side:"SELL", entry:"09:32", exit:"09:55", qty:77, ep:1194.0, xp:1177.8, pnl:1247.4 },
-      { sym:"SUNPHARMA", side:"SELL", entry:"09:52", exit:"10:13", qty:190, ep:1641.3, xp:1635.0, pnl:1197.0 },
-      { sym:"SUNPHARMA", side:"SELL", entry:"09:52", exit:"10:26", qty:95, ep:1641.3, xp:1629.6, pnl:1111.5 },
-      { sym:"COFORGE", side:"SELL", entry:"09:32", exit:"10:35", qty:77, ep:1194.0, xp:1169.6, pnl:1878.8 },
-      { sym:"SUNPHARMA", side:"SELL", entry:"09:52", exit:"10:39", qty:95, ep:1641.3, xp:1624.1, pnl:1634.0 },
-      { sym:"TCS", side:"SELL", entry:"09:26", exit:"10:44", qty:69, ep:2477.6, xp:2450.2, pnl:1890.6 },
-      { sym:"NAUKRI", side:"SELL", entry:"09:32", exit:"10:46", qty:176, ep:1002.6, xp:995.25, pnl:1293.6 },
-      { sym:"NAUKRI", side:"SELL", entry:"09:32", exit:"11:14", qty:88, ep:1002.6, xp:988.4, pnl:1249.6 },
-      { sym:"NAUKRI", side:"SELL", entry:"09:32", exit:"11:19", qty:88, ep:1002.6, xp:992.35, pnl:902.0 },
-      { sym:"COALINDIA", side:"BUY", entry:"09:26", exit:"15:10", qty:328, ep:459.45, xp:456.8, pnl:-869.2 },
-      { sym:"SYNGENE", side:"SELL", entry:"09:41", exit:"15:10", qty:521, ep:420.95, xp:421.05, pnl:-52.1 },
-    ]
-  },
 ];
 const datasets = {
   fifteen: {
