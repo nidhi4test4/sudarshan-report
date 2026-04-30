@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sudarshan Bot 15M — Trade Analysis Report (Mar 2–Apr 29, 2026)</title>
+  <title>Sudarshan Bot 15M — Trade Analysis Report (Mar 2–Apr 30, 2026)</title>
   <style>
     :root {
       --bg: #0d1117;
@@ -338,7 +338,7 @@
 <div class="bot-switch">
   <button class="bot-tab active" type="button" data-bot="fifteen" onclick="showBotTab('fifteen')">Sudarshan 15M</button>
   <button class="bot-tab" type="button" data-bot="five" onclick="showBotTab('five')">Sudarshan 5M</button>
-  <p id="page-period" style="flex-basis: 100%; color: var(--muted); font-size: 0.85rem; margin: 6px 0 14px 0;">Period: 2 March 2026 – 29 April 2026 &nbsp;|&nbsp; All figures in ₹ &nbsp;|&nbsp; Paper Trading</p>
+  <p id="page-period" style="flex-basis: 100%; color: var(--muted); font-size: 0.85rem; margin: 6px 0 14px 0;">Period: 2 March 2026 – 30 April 2026 &nbsp;|&nbsp; All figures in ₹ &nbsp;|&nbsp; Paper Trading</p>
 </div>
 
 <!-- ─── KPI Strip ─── -->
@@ -606,6 +606,7 @@
 <script>
 // ═══════════════════════════ DATA ═══════════════════════════
 const fifteenDays = [
+
 
 
 
@@ -1123,6 +1124,16 @@ const fifteenDays = [
       { sym:"MAXHEALTH", side:"BUY", entry:"10:00", exit:"13:45", qty:154, ep:1023.69, xp:1017.8, pnl:-1010.6 },
       { sym:"MARUTI", side:"BUY", entry:"09:30", exit:"14:00", qty:5, ep:13421.8, xp:13315.0, pnl:-605.11 },
       { sym:"CROMPTON", side:"BUY", entry:"09:45", exit:"14:30", qty:295, ep:274.86, xp:275.56, pnl:130.13 },
+    ]
+  },
+  {
+    date: "30 Apr", day: "Thu", bias: "BEARISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: -7891.47, charges: 723.09, net: -8614.56,
+    trades: [
+      { sym:"BRITANNIA", side:"SELL", entry:"11:15", exit:"11:31", qty:75, ep:5653.26, xp:5689.0, pnl:-2880.36 },
+      { sym:"HAL", side:"SELL", entry:"10:15", exit:"13:01", qty:153, ep:4314.96, xp:4335.9, pnl:-3488.08 },
+      { sym:"ONGC", side:"SELL", entry:"13:15", exit:"15:06", qty:1785, ep:299.03, xp:300.15, pnl:-2246.11 },
     ]
   },
 ];
