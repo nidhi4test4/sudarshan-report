@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sudarshan Bot 15M — Trade Analysis Report (Mar 2–Apr 30, 2026)</title>
+  <title>Sudarshan Bot 15M — Trade Analysis Report (Mar 2–May 5, 2026)</title>
   <style>
     :root {
       --bg: #0d1117;
@@ -338,7 +338,7 @@
 <div class="bot-switch">
   <button class="bot-tab active" type="button" data-bot="fifteen" onclick="showBotTab('fifteen')">Sudarshan 15M</button>
   <button class="bot-tab" type="button" data-bot="five" onclick="showBotTab('five')">Sudarshan 5M</button>
-  <p id="page-period" style="flex-basis: 100%; color: var(--muted); font-size: 0.85rem; margin: 6px 0 14px 0;">Period: 2 March 2026 – 30 April 2026 &nbsp;|&nbsp; All figures in ₹ &nbsp;|&nbsp; Paper Trading</p>
+  <p id="page-period" style="flex-basis: 100%; color: var(--muted); font-size: 0.85rem; margin: 6px 0 14px 0;">Period: 2 March 2026 – 5 May 2026 &nbsp;|&nbsp; All figures in ₹ &nbsp;|&nbsp; Paper Trading</p>
 </div>
 
 <!-- ─── KPI Strip ─── -->
@@ -606,6 +606,7 @@
 <script>
 // ═══════════════════════════ DATA ═══════════════════════════
 const fifteenDays = [
+
 
 
 
@@ -1136,6 +1137,21 @@ const fifteenDays = [
       { sym:"BRITANNIA", side:"SELL", entry:"11:15", exit:"11:31", qty:75, ep:5653.26, xp:5689.0, pnl:-2880.36 },
       { sym:"HAL", side:"SELL", entry:"10:15", exit:"13:01", qty:153, ep:4314.96, xp:4335.9, pnl:-3488.08 },
       { sym:"ONGC", side:"SELL", entry:"13:15", exit:"15:06", qty:1785, ep:299.03, xp:300.15, pnl:-2246.11 },
+    ]
+  },
+  {
+    date: "05 May", day: "Tue", bias: "BEARISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: -490.12, charges: 651.53, net: -1141.65,
+    trades: [
+      { sym:"DELHIVERY", side:"SELL", entry:"09:45", exit:"10:01", qty:78, ep:460.05, xp:449.7, pnl:769.35 },
+      { sym:"DELHIVERY", side:"SELL", entry:"09:45", exit:"11:17", qty:78, ep:460.05, xp:456.75, pnl:219.22 },
+      { sym:"PETRONET", side:"SELL", entry:"10:30", exit:"11:34", qty:336, ep:273.6, xp:272.9, pnl:155.01 },
+      { sym:"AMBUJACEM", side:"SELL", entry:"10:45", exit:"11:34", qty:127, ep:432.85, xp:434.25, pnl:-236.53 },
+      { sym:"GAIL", side:"SELL", entry:"11:00", exit:"11:34", qty:812, ep:163.57, xp:163.53, pnl:-62.41 },
+      { sym:"CONCOR", side:"BUY", entry:"13:15", exit:"13:33", qty:452, ep:520.75, xp:519.0, pnl:-922.49 },
+      { sym:"TCS", side:"SELL", entry:"13:30", exit:"13:41", qty:92, ep:2419.1, xp:2428.2, pnl:-964.37 },
+      { sym:"BHARTIARTL", side:"SELL", entry:"14:00", exit:"14:33", qty:55, ep:1809.2, xp:1809.5, pnl:-99.43 },
     ]
   },
 ];
