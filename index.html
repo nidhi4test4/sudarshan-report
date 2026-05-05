@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sudarshan Bot 15M — Trade Analysis Report (Mar 2–May 5, 2026)</title>
+  <title>Sudarshan Bot 15M — Trade Analysis Report (Mar 2–May 4, 2026)</title>
   <style>
     :root {
       --bg: #0d1117;
@@ -338,7 +338,7 @@
 <div class="bot-switch">
   <button class="bot-tab active" type="button" data-bot="fifteen" onclick="showBotTab('fifteen')">Sudarshan 15M</button>
   <button class="bot-tab" type="button" data-bot="five" onclick="showBotTab('five')">Sudarshan 5M</button>
-  <p id="page-period" style="flex-basis: 100%; color: var(--muted); font-size: 0.85rem; margin: 6px 0 14px 0;">Period: 2 March 2026 – 5 May 2026 &nbsp;|&nbsp; All figures in ₹ &nbsp;|&nbsp; Paper Trading</p>
+  <p id="page-period" style="flex-basis: 100%; color: var(--muted); font-size: 0.85rem; margin: 6px 0 14px 0;">Period: 2 March 2026 – 4 May 2026 &nbsp;|&nbsp; All figures in ₹ &nbsp;|&nbsp; Paper Trading</p>
 </div>
 
 <!-- ─── KPI Strip ─── -->
@@ -606,6 +606,7 @@
 <script>
 // ═══════════════════════════ DATA ═══════════════════════════
 const fifteenDays = [
+
 
 
 
@@ -1152,6 +1153,22 @@ const fifteenDays = [
       { sym:"CONCOR", side:"BUY", entry:"13:15", exit:"13:33", qty:452, ep:520.75, xp:519.0, pnl:-922.49 },
       { sym:"TCS", side:"SELL", entry:"13:30", exit:"13:41", qty:92, ep:2419.1, xp:2428.2, pnl:-964.37 },
       { sym:"BHARTIARTL", side:"SELL", entry:"14:00", exit:"14:33", qty:55, ep:1809.2, xp:1809.5, pnl:-99.43 },
+    ]
+  },
+  {
+    date: "04 May", day: "Mon", bias: "BULLISH",
+    sessionEnd: "15:10 ✅", anomaly: "",
+    gross: -515.3, charges: 758.34, net: -1273.64,
+    trades: [
+      { sym:"ABB", side:"BUY", entry:"10:01", exit:"10:42", qty:11, ep:7346.22, xp:7275.0, pnl:-859.41 },
+      { sym:"MAXHEALTH", side:"BUY", entry:"11:15", exit:"12:18", qty:77, ep:1009.35, xp:1019.65, pnl:717.76 },
+      { sym:"POWERINDIA", side:"BUY", entry:"13:00", exit:"13:29", qty:4, ep:33835.0, xp:33640.0, pnl:-875.57 },
+      { sym:"MAXHEALTH", side:"BUY", entry:"11:15", exit:"13:35", qty:78, ep:1009.35, xp:1008.9, pnl:-110.56 },
+      { sym:"KEI", side:"BUY", entry:"11:15", exit:"14:05", qty:10, ep:4954.1, xp:5029.0, pnl:695.65 },
+      { sym:"LT", side:"BUY", entry:"09:45", exit:"14:41", qty:20, ep:4127.0, xp:4098.1, pnl:-654.67 },
+      { sym:"DIVISLAB", side:"BUY", entry:"10:15", exit:"15:10", qty:15, ep:6588.26, xp:6618.0, pnl:363.29 },
+      { sym:"KEI", side:"BUY", entry:"11:15", exit:"15:10", qty:11, ep:4954.1, xp:5051.8, pnl:1015.86 },
+      { sym:"SIEMENS", side:"BUY", entry:"13:45", exit:"15:10", qty:28, ep:3851.0, xp:3828.9, pnl:-704.54 },
     ]
   },
 ];
